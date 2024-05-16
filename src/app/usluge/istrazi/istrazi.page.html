@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>usluge</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <app-usluga-element *ngFor="let usluga of usluge" [usluga]="usluga" [routerLink]="usluga.id"></app-usluga-element>
+  </ion-list>
+  <ion-buttons class="ion-justify-content-center">
+    <ion-button routerLink="/galerija" color="tertiary" fill="solid">
+      Galerija
+    </ion-button>
+
+    <ion-button (click)="openMenu()" color="tertiary" fill="solid">Glavni meni</ion-button>
+  </ion-buttons>
+
+</ion-content>

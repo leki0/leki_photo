@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/usluge"> </ion-back-button>
+    </ion-buttons>
+
+    <ion-title>galerija</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-buttons class="ion-justify-content-center">
+    <ion-button [routerLink]="'/usluge'" color="tertiary" fill="solid"
+    >Usluge</ion-button>
+    <ion-button (click)="openMenu()" color="tertiary" fill="solid">
+      Open menu
+    </ion-button>
+  </ion-buttons>
+</ion-content>

@@ -1,0 +1,44 @@
+<ion-app>
+  <ion-menu side="start" contentId="main">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>
+          LEKI PHOTO
+        </ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <ion-list lines="none">
+        <ion-item>
+          <ion-icon name="person-circle" slot="start"></ion-icon>
+          <ion-label>My profile</ion-label>
+        </ion-item>
+        <ion-menu-toggle>
+          <ion-item lines="none" routerLink="/usluge">
+            <ion-icon name="document-text" slot="start"></ion-icon>
+            <ion-label>Usluge</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+
+        <ion-menu-toggle>
+          <ion-item lines="none" routerLink="/galerija">
+            <ion-icon name="happy" slot="start"></ion-icon>
+            <ion-label>Galerija</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+
+        <ion-item>
+          <ion-icon name="odjava" slot="start"></ion-icon>
+          <ion-label>Odjava</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+
+  </ion-menu>
+
+  <ion-router-outlet id="main"></ion-router-outlet>
+
+ 
+</ion-app>
+
