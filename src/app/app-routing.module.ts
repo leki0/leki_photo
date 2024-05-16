@@ -20,6 +20,10 @@ const routes: Routes = [
     redirectTo: 'usluge',
     pathMatch: 'full'
   },
+  {
+    path: 'prijava',
+    loadChildren: () => import('./auth/prijava/prijava.module').then( m => m.PrijavaPageModule)
+  },
 ];
 
 @NgModule({
