@@ -24,6 +24,14 @@ const routes: Routes = [
     path: 'prijava',
     loadChildren: () => import('./auth/prijava/prijava.module').then( m => m.PrijavaPageModule)
   },
+  {
+    path: 'registrovanje',
+    loadChildren: () => import('./auth/registrovanje/registrovanje.module').then( m => m.RegistrovanjePageModule)
+  },
+  {
+    path: 'registracija',
+    loadChildren: () => import('./auth/registracija/registracija.module').then( m => m.RegistracijaPageModule)
+  },
 ];
 
 @NgModule({
