@@ -14,9 +14,19 @@ export class UslugaDetaljiPage implements OnInit {
   constructor(private route: ActivatedRoute, private uslugeServis: UslugeService) { }
 
   ngOnInit() {
-    this.route.paramMap.subscribe(paramMap=>{
-      this.usluga=this.uslugeServis.getUsluga(paramMap.get('uslugaId'));
+    this.route.paramMap.subscribe(paramMap => {
+      const uslugaId = paramMap.get('uslugaId');
+      if (uslugaId !== null) {
+        const foundUsluga = this.uslugeServis.getUsluga(uslugaId);
+        if (foundUsluga !== undefined) {
+          this.usluga = foundUsluga;
+        } else {
+          // Usluga nije pronađena, možete obraditi ovu situaciju na odgovarajući način
+        }
+      }
     });
   }
+  
+  
 
 }
