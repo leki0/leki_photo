@@ -5,46 +5,48 @@
 </ion-header>
 
 <ion-content>
-  <ion-grid>
-    <ion-row class="ion-justify-content-center">
+  <form [formGroup]="registerForm">
+    <ion-grid>
+      <ion-row class="ion-justify-content-center">
 
-      <ion-col size-sm="3">
-        <ion-item>
-          <ion-label position="floating">Ime</ion-label>
-          <ion-input type="email"></ion-input>
-        </ion-item>
-      </ion-col>
-      <ion-col size-sm="3">
-        <ion-item>
-          <ion-label position="floating">Prezime</ion-label>
-          <ion-input type="password"></ion-input>
-        </ion-item>
-      </ion-col>
+        <ion-col size-sm="3">
+          <ion-item>
+            <ion-label position="floating">Ime</ion-label>
+            <ion-input type="text" formControlName="ime"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size-sm="3">
+          <ion-item>
+            <ion-label position="floating">Prezime</ion-label>
+            <ion-input type="text" formControlName="prezime"></ion-input>
+          </ion-item>
+        </ion-col>
 
-    </ion-row>
-    <ion-row class="ion-justify-content-center">
-      <ion-col size-sm="6">
-        <ion-list>
-          <ion-item>
-            <ion-label position="floating">Email</ion-label>
-            <ion-input type="email"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label position="floating">Korisničko ime</ion-label>
-            <ion-input type="email"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label position="floating">Lozinka</ion-label>
-            <ion-input type="email"></ion-input>
-          </ion-item>
-        </ion-list>
-      </ion-col>
-    </ion-row>
-    <ion-row class="ion-justify-content-center">
-      <ion-col size-sm="6">
-        <ion-button type="submit" expand="block" shape="round">Registruj se</ion-button>
-      </ion-col>
-    </ion-row>
+      </ion-row>
+      <ion-row class="ion-justify-content-center">
+        <ion-col size-sm="6">
+          <ion-list>
+            <ion-item>
+              <ion-label position="floating">Email</ion-label>
+              <ion-input type="email" formControlName="email"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="floating">Korisničko ime</ion-label>
+              <ion-input type="text" formControlName="username"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="floating">Lozinka</ion-label>
+              <ion-input type="password" formControlName="password"></ion-input>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center">
+        <ion-col size-sm="6">
+          <ion-button type="submit" expand="block" shape="round">Registruj se</ion-button>
+        </ion-col>
+      </ion-row>
 
-  </ion-grid>
+    </ion-grid>
+  </form>
 </ion-content>
