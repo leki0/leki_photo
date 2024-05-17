@@ -1,19 +1,22 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './auth/auth.guard';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'usluge',
     pathMatch: 'full'
   },
   {
     path: 'usluge',
-    loadChildren: () => import('./usluge/usluge.module').then(m => m.UslugePageModule)
+    loadChildren: () => import('./usluge/usluge.module').then(m => m.UslugePageModule),
+    canActivate:[AuthGuard]
   },
   {
     path: 'galerija',
-    loadChildren: () => import('./galerija/galerija.module').then(m => m.GalerijaPageModule)
+    loadChildren: () => import('./galerija/galerija.module').then(m => m.GalerijaPageModule),
+    canActivate:[AuthGuard]
   },
   {
     path: '',
