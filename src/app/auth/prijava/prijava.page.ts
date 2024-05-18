@@ -17,8 +17,9 @@ export class PrijavaPage implements OnInit {
   }
   prijava(form: NgForm) {
     console.log(form);
-    //this.authService.prijava();
-    //this.router.navigateByUrl('usluge/tabs/istrazi');
+    this.authService.prijava();
+    this.router.navigateByUrl('usluge/tabs/istrazi');
   }
+
 
 }
