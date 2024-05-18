@@ -5,7 +5,7 @@
 </ion-header>
 
 <ion-content>
-  <form [formGroup]="registerForm">
+  <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
     <ion-grid>
       <ion-row class="ion-justify-content-center">
 
@@ -25,20 +25,38 @@
       </ion-row>
       <ion-row class="ion-justify-content-center">
         <ion-col size-sm="6">
-          <ion-list>
-            <ion-item>
-              <ion-label position="floating">Email</ion-label>
-              <ion-input type="email" formControlName="email"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="floating">Korisničko ime</ion-label>
-              <ion-input type="text" formControlName="username"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label position="floating">Lozinka</ion-label>
-              <ion-input type="password" formControlName="password"></ion-input>
-            </ion-item>
-          </ion-list>
+          <ion-item>
+            <ion-label position="floating">Email</ion-label>
+            <ion-input type="email" formControlName="email"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center"
+        *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+        <ion-col size-sm="6">
+          <p>Nije validna email adresa!</p>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center">
+        <ion-col size-sm="6">
+          <ion-item>
+            <ion-label position="floating">Korisničko ime</ion-label>
+            <ion-input type="text" formControlName="username"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center">
+        <ion-col size-sm="6">
+          <ion-item>
+            <ion-label position="floating">Lozinka</ion-label>
+            <ion-input type="password" formControlName="password"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-justify-content-center"
+        *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+        <ion-col size-sm="6">
+          <p>Lozinka mora da ima minimum 7 karaktera!</p>
         </ion-col>
       </ion-row>
       <ion-row class="ion-justify-content-center">

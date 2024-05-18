@@ -11,17 +11,18 @@ export class RegistracijaPage implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.registerForm=new FormGroup({
-      ime:new FormControl("Aleksa",Validators.required),
-      prezime:new FormControl(null,Validators.required),
-      email:new FormControl(null,(Validators.required,Validators.email)),
-      password:new FormControl(null,(Validators.required)),
-      username:new FormControl(null)
+    this.registerForm = new FormGroup({
+      ime: new FormControl("Aleksa", Validators.required),
+      prezime: new FormControl(null, Validators.required),
+      email: new FormControl(null, (Validators.required, Validators.email)),
+      password: new FormControl(null, (Validators.required, Validators.minLength(7))),
+      username: new FormControl(null, Validators.required)
 
     });
-    onRegister(){
 
-    }
+  }
+  onRegister() {
+    console.log(this.registerForm);
   }
 
 }

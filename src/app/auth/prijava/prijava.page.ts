@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-prijava',
@@ -14,9 +15,10 @@ export class PrijavaPage implements OnInit {
   ngOnInit() {
 
   }
-  prijava() {
-    this.authService.prijava();
-    this.router.navigateByUrl('usluge/tabs/istrazi');
+  prijava(form: NgForm) {
+    console.log(form);
+    //this.authService.prijava();
+    //this.router.navigateByUrl('usluge/tabs/istrazi');
   }
 
 }

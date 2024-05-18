@@ -5,23 +5,30 @@
 </ion-header>
 
 <ion-content>
-  <form #prijavaForm="ngForm" (ngSubmit)="prijava()">
+  <form #prijavaForm="ngForm" (ngSubmit)="prijava(prijavaForm)">
     <ion-grid>
       <ion-row class="ion-justify-content-center">
         <ion-col size-sm="6"><ion-list>
             <ion-item>
               <ion-label position="floating">Email</ion-label>
-              <ion-input type="email" ngModel name="email" required email></ion-input>
+              <ion-input type="email" ngModel name="email" required email #email="ngModel"></ion-input>
+            </ion-item>
+            <ion-item lines="none" *ngIf="email.invalid">
+              <ion-label>Nije validna email adresa!</ion-label>
             </ion-item>
             <ion-item>
               <ion-label position="floating">Lozinka</ion-label>
-              <ion-input type="password" ngModel name="password" required minlength="7"></ion-input>
+              <ion-input type="password" ngModel name="password" required minlength="7" #password="ngModel"></ion-input>
+            </ion-item>
+            <ion-item lines="none" *ngIf="password.invalid">
+              <ion-label>Unijeti minimum 7 karaktera!</ion-label>
             </ion-item>
           </ion-list></ion-col>
       </ion-row>
       <ion-row class="ion-justify-content-center">
         <ion-col size-sm="6">
-          <ion-button type="submit" expand="block" shape="round">Prijavi se</ion-button>
+          <ion-button type="submit" expand="block" shape="round" [disabled]="prijavaForm.invalid">Prijavi
+            se</ion-button>
         </ion-col>
       </ion-row>
 
