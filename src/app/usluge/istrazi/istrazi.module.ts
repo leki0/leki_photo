@@ -8,6 +8,7 @@ import { IstraziPageRoutingModule } from './istrazi-routing.module';
 
 import { IstraziPage } from './istrazi.page';
 import { UslugaElementComponent } from '../usluga-element/usluga-element.component';
+import { UslugeModalComponent } from '../usluge-modal/usluge-modal.component';
 
 @NgModule({
   imports: [
@@ -16,6 +17,6 @@ import { UslugaElementComponent } from '../usluga-element/usluga-element.compone
     IonicModule,
     IstraziPageRoutingModule
   ],
-  declarations: [IstraziPage,UslugaElementComponent]
+  declarations: [IstraziPage,UslugaElementComponent,UslugeModalComponent]
 })
 export class IstraziPageModule {}
