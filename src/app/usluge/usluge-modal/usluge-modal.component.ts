@@ -1,4 +1,4 @@
-import { Component, OnInit, viewChild } from '@angular/core';
+import { Component, Input, OnInit, viewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 
@@ -9,6 +9,8 @@ import { ModalController } from '@ionic/angular';
 })
 export class UslugeModalComponent implements OnInit {
   forma: any;
+  @Input()
+  title!: string;
 
   constructor(private modalCtrl: ModalController) {
 

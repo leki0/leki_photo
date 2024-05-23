@@ -27,12 +27,15 @@ export class IstraziPage implements OnInit {
   }
   openModal() {
     this.modalCtrl.create({
-      component: UslugeModalComponent
-    }).then((modal: HTMLIonModalElement) => { modal.present(); 
+      component: UslugeModalComponent,
+      componentProps: { title: 'Dodaj uslugu' }
+    }).then((modal: HTMLIonModalElement) => {
+      modal.present();
       return modal.onDidDismiss();
-    }).then((resultData:OverlayEventDetail<any>)=>{
-      if(resultData.role==='confirm'){
+    }).then((resultData: OverlayEventDetail<any>) => {
+      if (resultData.role === 'confirm') {
         console.log(resultData);
+        this.uslugaServis.addUsluga(resultData.data.UslugaData.naziv, resultData.data.UslugaData.opis).subscribe((res) => { console.log(res) });
       }
     });
   }
