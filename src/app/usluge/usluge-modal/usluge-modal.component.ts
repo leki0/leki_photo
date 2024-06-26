@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, viewChild } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 
@@ -8,24 +8,21 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['./usluge-modal.component.scss'],
 })
 export class UslugeModalComponent implements OnInit {
-  forma: any;
   @Input()
   title!: string;
 
-  constructor(private modalCtrl: ModalController) {
+  constructor(private modalCtrl: ModalController) {}
 
-  }
-
-  ngOnInit() { }
+  ngOnInit() {}
 
   onCancel() {
     this.modalCtrl.dismiss();
   }
+
   onAddUsluga(forma: NgForm) {
-    if (!this.forma.valid) {
+    if (!forma.valid) {
       return;
     }
-    this.modalCtrl.dismiss({ usluga: { naziv: this.forma.value['naziv'], opis: this.forma.value['opis'] } }, 'confirm');
+    this.modalCtrl.dismiss({ usluga: { naziv: forma.value['naziv'], opis: forma.value['opis'] } }, 'confirm');
   }
-
 }

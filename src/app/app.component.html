@@ -28,10 +28,12 @@
           </ion-item>
         </ion-menu-toggle>
 
-        <ion-item>
-          <ion-icon name="odjava" slot="start"></ion-icon>
-          <ion-label>Odjava</ion-label>
-        </ion-item>
+        <ion-menu-toggle>
+          <ion-item lines="none" routerLink="/prijava">
+            <ion-icon name="log-out" slot="start"></ion-icon>
+            <ion-label>Odjava</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
       </ion-list>
     </ion-content>
 
@@ -39,6 +41,5 @@
 
   <ion-router-outlet id="main"></ion-router-outlet>
 
- 
-</ion-app>
 
+</ion-app>

@@ -4,6 +4,7 @@ import { Usluga } from 'src/app/usluga.model';
 import { UslugeService } from '../usluge.service';
 import { UslugeModalComponent } from '../usluge-modal/usluge-modal.component';
 import { OverlayEventDetail } from '@ionic/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-istrazi',
@@ -12,10 +13,11 @@ import { OverlayEventDetail } from '@ionic/core';
 })
 export class IstraziPage implements OnInit {
 
-  usluge: Usluga[];
+  usluge: Usluga[] = [];
+  private uslugaSub:Subscription | undefined;
   constructor(private menuCtrl: MenuController, private uslugaServis: UslugeService, private modalCtrl: ModalController) {
     console.log('constructor');
-    this.usluge = this.uslugaServis.usluge;
+    //this.usluge = this.uslugaServis.usluge;
   }
 
   openMenu() {
@@ -23,26 +25,38 @@ export class IstraziPage implements OnInit {
   }
 
   ngOnInit() {
-    console.log('ngOnInit');
+    this.uslugaSub=this.uslugaServis.usluge.subscribe((usluge) => {
+
+      this.usluge = usluge;
+    });
   }
+  ionViewWillEnter() {
+    this.uslugaServis.getUsluge().subscribe((usluge) => {
+
+      //this.usluge = usluge;
+    });
+  }
+
   openModal() {
     this.modalCtrl.create({
       component: UslugeModalComponent,
       componentProps: { title: 'Dodaj uslugu' }
-    }).then((modal: HTMLIonModalElement) => {
+    }).then((modal) => {
       modal.present();
       return modal.onDidDismiss();
-    }).then((resultData: OverlayEventDetail<any>) => {
+    }).then((resultData: OverlayEventDetail) => {
       if (resultData.role === 'confirm') {
         console.log(resultData);
-        this.uslugaServis.addUsluga(resultData.data.UslugaData.naziv, resultData.data.UslugaData.opis).subscribe((res) => { console.log(res) });
+        const uslugaData = resultData.data.usluga;
+        this.uslugaServis.addUsluga(uslugaData.naziv, uslugaData.opis).subscribe((usluge) => {
+          //this.usluge = usluge;
+        });
+      } else {
+        console.error('Invalid resultData or missing usluga property:', resultData);
       }
     });
   }
 
-  ionViewWillEnter() {
-    console.log('ionViewWillEnter');
-  }
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter');
@@ -57,8 +71,8 @@ export class IstraziPage implements OnInit {
   }
 
   ngOnDestroy() {
-    console.log('ngOnDestroy');
+    if(this.uslugaSub){
+      this.uslugaSub.unsubscribe();
+    }
   }
-
-
 }
