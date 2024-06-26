@@ -25,6 +25,9 @@ export class UslugeService {
 
   addUsluga(nazivUsluge: string, kratakOpis: string) {
     let generatedId: string;
+    let novaUsluga:Usluga;
+
+
     return this.http.post<{ name: string }>(`https://lekiphoto-e1777-default-rtdb.europe-west1.firebasedatabase.app/usluge.json`, {
       nazivUsluge,
       kratakOpis
