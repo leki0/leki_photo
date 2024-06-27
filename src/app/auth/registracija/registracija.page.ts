@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../auth.service';
+import { LoadingController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registracija',
@@ -8,7 +11,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class RegistracijaPage implements OnInit {
   registerForm!: FormGroup;
-  constructor() { }
+  constructor(private authService: AuthService, private loadingCtrl: LoadingController, private router: Router) { }
 
   ngOnInit() {
     this.registerForm = new FormGroup({
@@ -16,13 +19,24 @@ export class RegistracijaPage implements OnInit {
       prezime: new FormControl(null, Validators.required),
       email: new FormControl(null, (Validators.required, Validators.email)),
       password: new FormControl(null, (Validators.required, Validators.minLength(7))),
-      username: new FormControl(null, Validators.required)
+
 
     });
 
   }
   onRegister() {
-    console.log(this.registerForm);
+    this.loadingCtrl.
+      create({ message: "Registering..." }).
+      then((loadingEl) => {
+        loadingEl.present();
+        this.authService.registracija(this.registerForm.value).subscribe(resData => {
+          console.log("Registracija uspjesna!");
+          console.log(resData);
+          loadingEl.dismiss();
+          this.router.navigateByUrl('/usluge');
+        });
+      });
+
   }
 
 }

@@ -5,7 +5,7 @@
 </ion-header>
 
 <ion-content>
-  <form #prijavaForm="ngForm" (ngSubmit)="prijava(prijavaForm)">
+  <form #prijavaForm="ngForm" (ngSubmit)="OnPrijava(prijavaForm)">
     <ion-grid>
       <ion-row class="ion-justify-content-center">
         <ion-col size-sm="6"><ion-list>
@@ -27,7 +27,10 @@
       </ion-row>
       <ion-row class="ion-justify-content-center">
         <ion-col size-sm="6">
-          <ion-button type="submit" expand="block" shape="round" [disabled]="prijavaForm.invalid">Prijavi
+          <div class="ion-text-center">
+            <ion-spinner color="primary" *ngIf="isLoading"></ion-spinner>
+          </div>
+          <ion-button type="submit" expand="block" shape="round" [disabled]="prijavaForm.invalid" *ngIf="!isLoading">Prijavi
             se</ion-button>
         </ion-col>
       </ion-row>

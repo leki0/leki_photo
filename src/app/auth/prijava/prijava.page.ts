@@ -9,16 +9,26 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./prijava.page.scss'],
 })
 export class PrijavaPage implements OnInit {
+  isLoading = false;
 
   constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
 
   }
-  prijava(form: NgForm) {
+  OnPrijava(form: NgForm) {
+    this.isLoading = true;
     console.log(form);
-    this.authService.prijava();
-    this.router.navigateByUrl('usluge/tabs/istrazi');
+    if (form.valid) {
+      this.authService.prijava(form.value).subscribe(resData => {
+        console.log("Prijava uspjesna!");
+        console.log(resData);
+        this.isLoading = false;
+        this.router.navigateByUrl('usluge/tabs/istrazi');
+      });
+    }
+
+
   }
 
 
