@@ -9,7 +9,7 @@ import { Usluga } from 'src/app/usluga.model';
 })
 export class UslugaElementComponent implements OnInit {
 
-  @Input() usluga: Usluga = { id: "u1", nazivUsluge: "Fotografisanje slavlja", kratakOpis: "blabla", slikaUrl: "" };
+  @Input() usluga: Usluga = { id: "u1", nazivUsluge: "Fotografisanje slavlja", kratakOpis: "blabla", imgUrl: '',userId:"xx" };
   constructor(private alertCtrl: AlertController) { }
 
   ngOnInit() { }

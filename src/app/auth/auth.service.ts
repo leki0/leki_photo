@@ -32,11 +32,22 @@ export class AuthService {
   constructor(private http: HttpClient) { }
   get isUserAuthenticated() {
     return this._user.asObservable().pipe(
-      map((user)=>{
-        if(user){
+      map((user) => {
+        if (user) {
           return !!user.token;
-        }else{
+        } else {
           return false;
+        }
+      })
+    );
+  }
+  get userId() {
+    return this._user.asObservable().pipe(
+      map((user) => {
+        if (user) {
+          return user.id;
+        } else {
+          return null;
         }
       })
     );
