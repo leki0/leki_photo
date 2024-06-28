@@ -30,17 +30,25 @@ export class UslugeService {
   addUsluga(nazivUsluge: string, kratakOpis: string) {
     let generatedId: string;
     let novaUsluga: Usluga;
+    let fetchedUserId:string;
     return this.authService.userId.pipe(take(1), switchMap(userId => {
+
       if (!userId) {
         throw new Error('No user ID found!');
       }
-      novaUsluga = new Usluga('',
-        nazivUsluge,
-        kratakOpis,
-        "https://img.myloview.com/stickers/camera-with-flash-icon-elements-of-camera-icon-for-concept-and-web-apps-illustration-icon-for-website-design-and-development-app-development-premium-icon-400-111926464.jpg",
-        userId);
-      return this.http.post<{ name: string }>(`https://lekiphoto-e1777-default-rtdb.europe-west1.firebasedatabase.app/usluge.json`, novaUsluga)
+      fetchedUserId=userId;
+      return this.authService.token;
+      
     }),
+      take(1),
+      switchMap((token)=>{
+        novaUsluga = new Usluga('',
+          nazivUsluge,
+          kratakOpis,
+          "https://img.myloview.com/stickers/camera-with-flash-icon-elements-of-camera-icon-for-concept-and-web-apps-illustration-icon-for-website-design-and-development-app-development-premium-icon-400-111926464.jpg",
+          fetchedUserId);
+        return this.http.post<{ name: string }>(`https://lekiphoto-e1777-default-rtdb.europe-west1.firebasedatabase.app/usluge.json?auth=${token}`, novaUsluga)
+      }),
       take(1),
       switchMap((resData) => {
 
@@ -57,9 +65,13 @@ export class UslugeService {
 
   }
   getUsluge() {
-    return this.http.
-      get<{ [key: string]: UslugaData }>(`https://lekiphoto-e1777-default-rtdb.europe-west1.firebasedatabase.app/usluge.json`)
-      .pipe(map((uslugeData) => {
+    return this.authService.token.pipe(
+      take(1),
+      switchMap((token) => {
+        return this.http.
+          get<{ [key: string]: UslugaData }>(`https://lekiphoto-e1777-default-rtdb.europe-west1.firebasedatabase.app/usluge.json?auth=${token}`)
+      }),
+      map((uslugeData) => {
         const usluge: Usluga[] = [];
         for (const key in uslugeData) {
           if (uslugeData.hasOwnProperty(key)) {
@@ -79,7 +91,8 @@ export class UslugeService {
       }), tap(usluge => {
         this._usluge.next(usluge);
       })
-      );
+    )
+
   }
 
   getUsluga(id: string) {

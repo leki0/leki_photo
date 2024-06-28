@@ -10,7 +10,7 @@ import { UslugeService } from '../../usluge.service';
 })
 export class UslugaDetaljiPage implements OnInit {
 
-  usluga: Usluga = { id: "u5", nazivUsluge: "Usluga 5", kratakOpis: "blablabla", slikaUrl: "" };
+  usluga: Usluga = { id: "u5", nazivUsluge: "Usluga 5", kratakOpis: "blablabla", slikaUrl: "", userId:"xx"};
   constructor(private route: ActivatedRoute, private uslugeServis: UslugeService) { }
 
   ngOnInit() {

@@ -52,6 +52,19 @@ export class AuthService {
       })
     );
   }
+
+  get token() {
+    return this._user.asObservable().pipe(
+      map((user) => {
+        if (user) {
+          return user.token;
+        } else {
+          return null;
+        }
+      })
+    );
+  }
+
   registracija(user: UserData) {
     this._isUserAuthenticated = true;
     return this.http.post<AuthResponseData>(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.firebaseAPIKey}`,
