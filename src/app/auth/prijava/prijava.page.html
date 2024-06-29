@@ -30,11 +30,18 @@
           <div class="ion-text-center">
             <ion-spinner color="primary" *ngIf="isLoading"></ion-spinner>
           </div>
-          <ion-button type="submit" expand="block" shape="round" [disabled]="prijavaForm.invalid" *ngIf="!isLoading">Prijavi
+          <ion-button type="submit" expand="block" shape="round" [disabled]="prijavaForm.invalid"
+            *ngIf="!isLoading">Prijavi
             se</ion-button>
         </ion-col>
       </ion-row>
-
+      <ion-row class="ion-justify-content-center">
+        <ion-col size-sm="6" class="ion-text-center">
+          <ion-label>
+            Nemate nalog? <a [routerLink]="['/registracija']">Registrujte se ovde</a>
+          </ion-label>
+        </ion-col>
+      </ion-row>
     </ion-grid>
   </form>
 </ion-content>
