@@ -9,24 +9,24 @@ import { UslugeService } from '../../usluge.service';
   styleUrls: ['./usluga-detalji.page.scss'],
 })
 export class UslugaDetaljiPage implements OnInit {
+  usluga: Usluga | undefined;
 
-  usluga: Usluga = { id: "u5", nazivUsluge: "Usluga 5", kratakOpis: "blablabla", slikaUrl: "", userId:"xx"};
-  constructor(private route: ActivatedRoute, private uslugeServis: UslugeService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private uslugeServis: UslugeService
+  ) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
       const uslugaId = paramMap.get('uslugaId');
       if (uslugaId !== null) {
-        const foundUsluga = this.uslugeServis.getUsluga(uslugaId);
-        if (foundUsluga !== undefined) {
+        this.uslugeServis.getUsluga(uslugaId).subscribe(foundUsluga => {
           this.usluga = foundUsluga;
-        } else {
-          // Usluga nije pronađena, možete obraditi ovu situaciju na odgovarajući način
-        }
+          if (!foundUsluga) {
+            console.error('Usluga nije pronađena!');
+          }
+        });
       }
     });
   }
-  
-  
-
 }

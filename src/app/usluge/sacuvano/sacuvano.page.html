@@ -1,13 +1,16 @@
 <ion-header>
-
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>sacuvano</ion-title>
+    <ion-title>Sačuvane Usluge</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <ion-list>
+    <ion-item *ngFor="let usluga of savedUsluge">
+      <ion-avatar slot="start">
+        <ion-img [src]="usluga.slikaUrl"></ion-img>
+      </ion-avatar>
+      <ion-label>{{usluga.nazivUsluge}} : {{usluga.kratakOpis}}</ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>

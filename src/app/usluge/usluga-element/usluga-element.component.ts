@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { Usluga } from 'src/app/usluga.model';
+import { UslugeService } from 'src/app/usluge/usluge.service';
 
 @Component({
   selector: 'app-usluga-element',
@@ -9,11 +10,12 @@ import { Usluga } from 'src/app/usluga.model';
 })
 export class UslugaElementComponent implements OnInit {
 
-  @Input() usluga: Usluga = { id: "u1", nazivUsluge: "Fotografisanje slavlja", kratakOpis: "blabla", slikaUrl: '',userId:"xx" };
-  constructor(private alertCtrl: AlertController) { }
+  @Input()
+  usluga!: Usluga;
+
+  constructor(private alertCtrl: AlertController, private uslugeService: UslugeService) { }
 
   ngOnInit() { }
-
 
   openAlert(event: any) {
     event.stopPropagation();
@@ -26,7 +28,7 @@ export class UslugaElementComponent implements OnInit {
         {
           text: "Save",
           handler: () => {
-            console.log("Sačuvano!");
+            this.saveUsluga();
           }
         },
         {
@@ -37,9 +39,14 @@ export class UslugaElementComponent implements OnInit {
           }
         }
       ]
-    }).then((alert:HTMLIonAlertElement)=>{
+    }).then((alert) => {
       alert.present();
     });
   }
 
+  saveUsluga() {
+    this.uslugeService.saveUsluga(this.usluga).subscribe(() => {
+      console.log("Sačuvano!");
+    });
+  }
 }

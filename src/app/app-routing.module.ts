@@ -11,12 +11,25 @@ const routes: Routes = [
   {
     path: 'usluge',
     loadChildren: () => import('./usluge/usluge.module').then(m => m.UslugePageModule),
-    canActivate:[AuthGuard]
+    canActivate: [AuthGuard]
   },
   {
     path: 'galerija',
     loadChildren: () => import('./galerija/galerija.module').then(m => m.GalerijaPageModule),
-    canActivate:[AuthGuard]
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'usluge/tabs/istrazi',
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('./usluge/istrazi/istrazi.module').then(m => m.IstraziPageModule)
+      },
+      {
+        path: ':uslugaId',
+        loadChildren: () => import('./usluge/istrazi/usluga-detalji/usluga-detalji.module').then(m => m.UslugaDetaljiPageModule)
+      }
+    ]
   },
   {
     path: '',
@@ -25,12 +38,12 @@ const routes: Routes = [
   },
   {
     path: 'prijava',
-    loadChildren: () => import('./auth/prijava/prijava.module').then( m => m.PrijavaPageModule)
+    loadChildren: () => import('./auth/prijava/prijava.module').then(m => m.PrijavaPageModule)
   },
 
   {
     path: 'registracija',
-    loadChildren: () => import('./auth/registracija/registracija.module').then( m => m.RegistracijaPageModule)
+    loadChildren: () => import('./auth/registracija/registracija.module').then(m => m.RegistracijaPageModule)
   },
 ];
 

@@ -1,8 +1,8 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>usluga-detalji</ion-title>
+    <ion-title>{{ usluga?.nazivUsluge }}</ion-title>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/usluge/tabs/istrazi"> </ion-back-button>
+      <ion-back-button defaultHref="/usluge/tabs/istrazi"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -10,7 +10,31 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">usluga-detalji</ion-title>
+      <ion-title size="large">{{ usluga?.nazivUsluge }}</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <ion-grid class="center-content">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="12" size-md="8" size-lg="6">
+        <ion-card *ngIf="usluga">
+          <ion-card-content>
+            <div class="card-img-container">
+              <ion-img [src]="usluga.slikaUrl"></ion-img>
+            </div>
+            <ion-card-header>
+              <ion-card-title>{{ usluga.nazivUsluge }}</ion-card-title>
+            </ion-card-header>
+            <p class="card-text">{{ usluga.kratakOpis }}</p>
+          </ion-card-content>
+        </ion-card>
+
+        <div *ngIf="!usluga">
+          <ion-text color="danger">
+            <h2>Usluga nije pronađena!</h2>
+          </ion-text>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
