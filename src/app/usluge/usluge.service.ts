@@ -18,8 +18,8 @@ export class UslugeService {
 
   private _usluge = new BehaviorSubject<Usluga[]>([]);
 
-  oldUsluge = [{ id: "u1", nazivUsluge: "Fotografisanje rodjendana", kratakOpis: "blabla", slikaUrl: "" },
-  { id: "u2", nazivUsluge: "Fotografisanje krstenja", kratakOpis: "blabla", slikaUrl: "" }];
+  oldUsluge: Usluga[] = [{ id: "u1", nazivUsluge: "Fotografisanje rodjendana", kratakOpis: "blabla", slikaUrl: "", userId: "x" },
+  { id: "u2", nazivUsluge: "Fotografisanje krstenja", kratakOpis: "blabla", slikaUrl: "", userId: "xc" }];
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
@@ -30,24 +30,27 @@ export class UslugeService {
   addUsluga(nazivUsluge: string, kratakOpis: string) {
     let generatedId: string;
     let novaUsluga: Usluga;
-    let fetchedUserId:string;
-    return this.authService.userId.pipe(take(1), switchMap(userId => {
+    let fetchedUserId: string;
+    return this.authService.userId.pipe(take(1), 
+    switchMap(userId => {
 
       if (!userId) {
         throw new Error('No user ID found!');
       }
-      fetchedUserId=userId;
+      fetchedUserId = userId;
       return this.authService.token;
-      
+
     }),
       take(1),
-      switchMap((token)=>{
-        novaUsluga = new Usluga('',
+      switchMap((token) => {
+        novaUsluga = new Usluga(
+          '',
           nazivUsluge,
           kratakOpis,
           "https://img.myloview.com/stickers/camera-with-flash-icon-elements-of-camera-icon-for-concept-and-web-apps-illustration-icon-for-website-design-and-development-app-development-premium-icon-400-111926464.jpg",
           fetchedUserId);
-        return this.http.post<{ name: string }>(`https://lekiphoto-e1777-default-rtdb.europe-west1.firebasedatabase.app/usluge.json?auth=${token}`, novaUsluga)
+        return this.http.post<{ name: string }>(
+          `https://lekiphoto-e1777-default-rtdb.europe-west1.firebasedatabase.app/usluge.json?auth=${token}`, novaUsluga);
       }),
       take(1),
       switchMap((resData) => {

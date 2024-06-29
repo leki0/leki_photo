@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MenuController, ModalController } from '@ionic/angular';
 import { Usluga } from 'src/app/usluga.model';
 import { UslugeService } from '../usluge.service';
@@ -11,13 +11,17 @@ import { Subscription } from 'rxjs';
   templateUrl: './istrazi.page.html',
   styleUrls: ['./istrazi.page.scss'],
 })
-export class IstraziPage implements OnInit {
+export class IstraziPage implements OnInit, OnDestroy {
 
   usluge: Usluga[] = [];
-  private uslugaSub:Subscription | undefined;
-  constructor(private menuCtrl: MenuController, private uslugaServis: UslugeService, private modalCtrl: ModalController) {
+  private uslugaSub: Subscription | undefined;
+
+  constructor(
+    private menuCtrl: MenuController,
+    private uslugaServis: UslugeService,
+    private modalCtrl: ModalController
+  ) {
     console.log('constructor');
-    //this.usluge = this.uslugaServis.usluge;
   }
 
   openMenu() {
@@ -25,15 +29,14 @@ export class IstraziPage implements OnInit {
   }
 
   ngOnInit() {
-    this.uslugaSub=this.uslugaServis.usluge.subscribe((usluge) => {
-
+    this.uslugaSub = this.uslugaServis.usluge.subscribe((usluge) => {
       this.usluge = usluge;
     });
   }
+
   ionViewWillEnter() {
     this.uslugaServis.getUsluge().subscribe((usluge) => {
-
-      //this.usluge = usluge;
+      console.log('Fetched usluge in ionViewWillEnter:', usluge);
     });
   }
 
@@ -45,18 +48,17 @@ export class IstraziPage implements OnInit {
       modal.present();
       return modal.onDidDismiss();
     }).then((resultData: OverlayEventDetail) => {
-      if (resultData.role === 'confirm') {
-        console.log(resultData);
+      if (resultData.role === 'confirm' && resultData.data && resultData.data.usluga) {
+        console.log('Modal result data:', resultData);
         const uslugaData = resultData.data.usluga;
         this.uslugaServis.addUsluga(uslugaData.naziv, uslugaData.opis).subscribe((usluge) => {
-          //this.usluge = usluge;
+          console.log('Added usluga:', usluge);
         });
       } else {
         console.error('Invalid resultData or missing usluga property:', resultData);
       }
     });
   }
-
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter');
@@ -71,7 +73,7 @@ export class IstraziPage implements OnInit {
   }
 
   ngOnDestroy() {
-    if(this.uslugaSub){
+    if (this.uslugaSub) {
       this.uslugaSub.unsubscribe();
     }
   }
