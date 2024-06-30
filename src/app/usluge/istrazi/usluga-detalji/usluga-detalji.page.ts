@@ -10,11 +10,12 @@ import { UslugeService } from '../../usluge.service';
 })
 export class UslugaDetaljiPage implements OnInit {
   usluga: Usluga | undefined;
+  datumZakazivanja: string | undefined;
 
   constructor(
     private route: ActivatedRoute,
     private uslugeServis: UslugeService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
@@ -28,5 +29,12 @@ export class UslugaDetaljiPage implements OnInit {
         });
       }
     });
+  }
+  onZakazi() {
+    if (this.usluga && this.datumZakazivanja) {
+      this.uslugeServis.zakaziUslugu(this.usluga, this.datumZakazivanja).subscribe(() => {
+        console.log('Usluga je uspešno zakazana');
+      });
+    }
   }
 }

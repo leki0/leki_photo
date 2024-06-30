@@ -29,6 +29,12 @@
           </ion-card-content>
         </ion-card>
 
+        <ion-item>
+          <ion-label>Izaberi datum</ion-label>
+          <ion-datetime display-format="DD/MM/YYYY" [(ngModel)]="datumZakazivanja"></ion-datetime>
+        </ion-item>
+        <ion-button expand="full" color="tertiary" (click)="onZakazi()">ZAKAZI</ion-button>
+
         <div *ngIf="!usluga">
           <ion-text color="danger">
             <h2>Usluga nije pronađena!</h2>
