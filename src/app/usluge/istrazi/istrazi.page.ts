@@ -16,7 +16,6 @@ export class IstraziPage implements OnInit, OnDestroy {
 
   usluge: Usluga[] = [];
   private uslugaSub: Subscription | undefined;
-  private userRoleSub: Subscription | undefined;
   isAdmin = false;
 
   constructor(
@@ -36,8 +35,7 @@ export class IstraziPage implements OnInit, OnDestroy {
     this.uslugaSub = this.uslugaServis.usluge.subscribe((usluge) => {
       this.usluge = usluge;
     });
-
-    this.userRoleSub = this.authService.userRole.subscribe(role => {
+    this.authService.userRole.subscribe(role => {
       this.isAdmin = (role === 'admin');
     });
   }
@@ -83,9 +81,6 @@ export class IstraziPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.uslugaSub) {
       this.uslugaSub.unsubscribe();
-    }
-    if (this.userRoleSub) {
-      this.userRoleSub.unsubscribe();
     }
   }
 }

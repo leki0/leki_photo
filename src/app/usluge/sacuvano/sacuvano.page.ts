@@ -7,19 +7,17 @@ import { UslugeService } from '../usluge.service';
   templateUrl: './sacuvano.page.html',
   styleUrls: ['./sacuvano.page.scss'],
 })
-
-
 export class SacuvanoPage implements OnInit {
   savedUsluge: Usluga[] = [];
 
-  constructor(private uslugeService: UslugeService) { }
+  constructor(private uslugeService: UslugeService) {}
 
   ngOnInit() {
     this.uslugeService.savedUsluge.subscribe(usluge => {
       this.savedUsluge = usluge;
     });
 
+    // Get only the saved services for the current user
     this.uslugeService.getSavedUsluge().subscribe();
   }
 }
-

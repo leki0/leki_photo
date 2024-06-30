@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
+import { AuthService } from 'src/app/auth/auth.service';
 import { Usluga } from 'src/app/usluga.model';
 import { UslugeService } from 'src/app/usluge/usluge.service';
 
@@ -7,15 +8,21 @@ import { UslugeService } from 'src/app/usluge/usluge.service';
   selector: 'app-usluga-element',
   templateUrl: './usluga-element.component.html',
   styleUrls: ['./usluga-element.component.scss'],
+
 })
 export class UslugaElementComponent implements OnInit {
 
   @Input()
   usluga!: Usluga;
+  isAdmin = false;
 
-  constructor(private alertCtrl: AlertController, private uslugeService: UslugeService) { }
+  constructor(private alertCtrl: AlertController, private uslugeService: UslugeService, private authService: AuthService) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.authService.userRole.subscribe(role => {
+      this.isAdmin = (role === 'admin');
+    });
+  }
 
   openAlert(event: any) {
     event.stopPropagation();

@@ -23,56 +23,89 @@ export class UslugeService {
   }
 
   saveUsluga(usluga: Usluga) {
+    let fetchedUserId: string;
     return this.authService.userId.pipe(
       take(1),
       switchMap(userId => {
         if (!userId) {
           throw new Error('No user ID found!');
         }
+        fetchedUserId = userId;
         return this.authService.token;
       }),
       take(1),
-      switchMap((token) => {
+      switchMap(token => {
+        const newSavedUsluga = {
+          nazivUsluge: usluga.nazivUsluge,
+          kratakOpis: usluga.kratakOpis,
+          slikaUrl: usluga.slikaUrl,
+          userId: fetchedUserId // Koristimo fetchedUserId koji je string
+        };
         return this.http.post<{ name: string }>(
-          `https://lekiphoto-e1777-default-rtdb.europe-west1.firebasedatabase.app/savedUsluge.json?auth=${token}`, usluga);
-      }),
-      switchMap(() => {
-        return this.savedUsluge;
-      }),
-      take(1),
-      tap((savedUsluge) => {
-        this._savedUsluge.next(savedUsluge.concat(usluga));
+          `https://lekiphoto-e1777-default-rtdb.europe-west1.firebasedatabase.app/savedUsluge.json?auth=${token}`,
+          newSavedUsluga
+        );
       })
     );
   }
 
+
   getSavedUsluge() {
-    return this.authService.token.pipe(
+    let fetchedUserId: string;
+    return this.authService.userId.pipe(
+      take(1),
+      switchMap(userId => {
+        if (!userId) {
+          throw new Error('No user ID found!');
+        }
+        fetchedUserId = userId;
+        console.log('User ID pri preuzimanju sačuvanih usluga:', fetchedUserId);
+        return this.authService.token;
+      }),
       take(1),
       switchMap((token) => {
-        return this.http.get<{ [key: string]: Usluga }>(
-          `https://lekiphoto-e1777-default-rtdb.europe-west1.firebasedatabase.app/savedUsluge.json?auth=${token}`);
-      }),
-      map((savedUslugeData) => {
-        const savedUsluge: Usluga[] = [];
-        for (const key in savedUslugeData) {
-          if (savedUslugeData.hasOwnProperty(key)) {
-            savedUsluge.push(new Usluga(
-              key,
-              savedUslugeData[key].nazivUsluge,
-              savedUslugeData[key].kratakOpis,
-              savedUslugeData[key].slikaUrl,
-              savedUslugeData[key].userId
-            ));
-          }
-        }
-        return savedUsluge;
+        return this.authService.userRole.pipe(
+          take(1),
+          switchMap(role => {
+            if (role === 'admin') {
+              // Ako je korisnik admin, vratite sve sačuvane usluge
+              return this.getAllSavedUsluge();
+            } else {
+              // Ako nije admin, vratite samo sačuvane usluge za tog korisnika
+              return this.http.get<{ [key: string]: Usluga }>(
+                `https://lekiphoto-e1777-default-rtdb.europe-west1.firebasedatabase.app/savedUsluge.json?auth=${token}`
+              ).pipe(
+                map(savedUslugeData => {
+                  const savedUsluge: Usluga[] = [];
+                  for (const key in savedUslugeData) {
+                    if (savedUslugeData.hasOwnProperty(key)) {
+                      const usluga = new Usluga(
+                        key,
+                        savedUslugeData[key].nazivUsluge,
+                        savedUslugeData[key].kratakOpis,
+                        savedUslugeData[key].slikaUrl,
+                        savedUslugeData[key].userId
+                      );
+                      if (usluga.userId === fetchedUserId) {
+                        savedUsluge.push(usluga);
+                      }
+                    }
+                  }
+                  console.log('Filtrirane sačuvane usluge:', savedUsluge);
+                  return savedUsluge;
+                })
+              );
+            }
+          })
+        );
       }),
       tap(savedUsluge => {
         this._savedUsluge.next(savedUsluge);
       })
     );
   }
+
+
 
   oldUsluge: Usluga[] = [{ id: "u1", nazivUsluge: "Fotografisanje rodjendana", kratakOpis: "blabla", slikaUrl: "", userId: "x" },
   { id: "u2", nazivUsluge: "Fotografisanje krstenja", kratakOpis: "blabla", slikaUrl: "", userId: "xc" }];
@@ -165,6 +198,35 @@ export class UslugeService {
       })
     )
 
+  }
+
+  getAllSavedUsluge() {
+    return this.authService.token.pipe(
+      take(1),
+      switchMap(token => {
+        return this.http.get<{ [key: string]: Usluga }>(
+          `https://lekiphoto-e1777-default-rtdb.europe-west1.firebasedatabase.app/savedUsluge.json?auth=${token}`
+        );
+      }),
+      map(allSavedUslugeData => {
+        const allSavedUsluge: Usluga[] = [];
+        for (const key in allSavedUslugeData) {
+          if (allSavedUslugeData.hasOwnProperty(key)) {
+            allSavedUsluge.push(new Usluga(
+              key,
+              allSavedUslugeData[key].nazivUsluge,
+              allSavedUslugeData[key].kratakOpis,
+              allSavedUslugeData[key].slikaUrl,
+              allSavedUslugeData[key].userId
+            ));
+          }
+        }
+        return allSavedUsluge;
+      }),
+      tap(allSavedUsluge => {
+        this._savedUsluge.next(allSavedUsluge);
+      })
+    );
   }
 
   getUsluga(id: string): Observable<Usluga | undefined> {

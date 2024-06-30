@@ -3,7 +3,9 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Korisnik } from './korisnik.model';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { map, tap } from 'rxjs/operators';
+import { map, switchMap, take, tap } from 'rxjs/operators';
+import { Usluga } from '../usluga.model';
+import { Observable } from 'rxjs/internal/Observable';
 
 interface AuthResponseData {
   kind: string;
@@ -30,7 +32,7 @@ export class AuthService {
   private _isUserAuthenticated = false;
   private _user = new BehaviorSubject<Korisnik | null>(null);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   get isUserAuthenticated() {
     return this._user.asObservable().pipe(
@@ -92,6 +94,7 @@ export class AuthService {
       }));
   }
 
+
   prijava(user: UserData) {
     this._isUserAuthenticated = true;
     return this.http.post<AuthResponseData>(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.firebaseAPIKey}`,
@@ -104,12 +107,11 @@ export class AuthService {
     }));
   }
 
-  odjava() {
-    this._user.next(null);
-  }
-
   private getRole(email: string): string {
-    const adminEmail = 'aleksa@gmail.com'; 
-    return email === adminEmail ? 'admin' : 'user';
+    if (email === 'aleksa@gmail.com') {
+      return 'admin';
+    } else {
+      return 'user';
+    }
   }
 }
