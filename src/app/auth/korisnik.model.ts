@@ -1,5 +1,5 @@
 export class Korisnik {
-    constructor(public id: string, public email: string, private _token: string, private tokenExpirationDate: Date) {
+    constructor(public id: string, public email: string, private _token: string, private tokenExpirationDate: Date, public role: string) {
 
     }
     get token() {

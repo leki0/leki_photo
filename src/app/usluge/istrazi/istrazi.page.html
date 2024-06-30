@@ -6,11 +6,10 @@
 
     <ion-title>Usluge</ion-title>
     <ion-buttons slot="end">
-      <ion-fab-button size="small" color="tertiary" (click)="openModal()">
+      <ion-fab-button *ngIf="isAdmin" size="small" color="tertiary" (click)="openModal()">
         <ion-icon name="add"></ion-icon>
       </ion-fab-button>
     </ion-buttons>
-
   </ion-toolbar>
 </ion-header>
 
@@ -25,5 +24,4 @@
 
     <ion-button (click)="openMenu()" color="tertiary" fill="solid">Glavni meni</ion-button>
   </ion-buttons>
-
 </ion-content>

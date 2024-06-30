@@ -5,6 +5,7 @@ import { UslugeService } from '../usluge.service';
 import { UslugeModalComponent } from '../usluge-modal/usluge-modal.component';
 import { OverlayEventDetail } from '@ionic/core';
 import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-istrazi',
@@ -15,11 +16,14 @@ export class IstraziPage implements OnInit, OnDestroy {
 
   usluge: Usluga[] = [];
   private uslugaSub: Subscription | undefined;
+  private userRoleSub: Subscription | undefined;
+  isAdmin = false;
 
   constructor(
     private menuCtrl: MenuController,
     private uslugaServis: UslugeService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private authService: AuthService
   ) {
     console.log('constructor');
   }
@@ -31,6 +35,10 @@ export class IstraziPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.uslugaSub = this.uslugaServis.usluge.subscribe((usluge) => {
       this.usluge = usluge;
+    });
+
+    this.userRoleSub = this.authService.userRole.subscribe(role => {
+      this.isAdmin = (role === 'admin');
     });
   }
 
@@ -75,6 +83,9 @@ export class IstraziPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.uslugaSub) {
       this.uslugaSub.unsubscribe();
+    }
+    if (this.userRoleSub) {
+      this.userRoleSub.unsubscribe();
     }
   }
 }
