@@ -16,11 +16,11 @@
 
   <ion-grid class="center-content">
     <ion-row class="ion-justify-content-center">
-      <ion-col size="12">
+      <ion-col size="12" size-md="6" size-lg="4">
         <ion-card *ngIf="usluga">
           <ion-card-content>
             <div class="card-img-container">
-              <ion-img [src]="usluga.slikaUrl"></ion-img>
+              <ion-img src="assets/icon/krstenje.jpg" class="profile-img"></ion-img>
             </div>
             <ion-card-header>
               <ion-card-title *ngIf="!editMode">{{ usluga.nazivUsluge }}</ion-card-title>
@@ -31,6 +31,7 @@
           </ion-card-content>
         </ion-card>
 
+        <!-- Prikazivanje dugmeta "Postavi datum" samo korisnicima -->
         <div *ngIf="userRole !== 'admin'">
           <ion-item>
             <ion-label>Izaberi datum</ion-label>
@@ -39,6 +40,7 @@
           <ion-button expand="full" color="tertiary" (click)="onZakazi()">ZAKAZI</ion-button>
         </div>
 
+        <!-- Prikazivanje dugmadi samo za admina -->
         <div *ngIf="userRole === 'admin'">
           <ion-button expand="full" color="primary" (click)="onEdit()">
             {{ editMode ? 'PREKINI' : 'IZMENI' }}

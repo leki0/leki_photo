@@ -9,9 +9,7 @@ interface UslugaData {
   kratakOpis: string;
   slikaUrl: string;
   userId: string;
-
   datumZakazivanja?: string;
-  //rekla je da ovaj interfejs ce vracati nesto
 }
 @Injectable({
   providedIn: 'root'
@@ -51,8 +49,8 @@ export class UslugeService {
     );
   }
 
-  oldUsluge: Usluga[] = [{ id: "u1", nazivUsluge: "Fotografisanje rodjendana", kratakOpis: "blabla", slikaUrl: "", userId: "x" },
-  { id: "u2", nazivUsluge: "Fotografisanje krstenja", kratakOpis: "blabla", slikaUrl: "", userId: "xc" }];
+  oldUsluge: Usluga[] = [{ id: "u1", nazivUsluge: "Fotografisanje rodjendana", kratakOpis: "blabla", slikaUrl: "", userId: "x",datumiZakazivanja: []},
+  { id: "u2", nazivUsluge: "Fotografisanje krstenja", kratakOpis: "blabla", slikaUrl: "", userId: "xc",datumiZakazivanja: [] }];
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 

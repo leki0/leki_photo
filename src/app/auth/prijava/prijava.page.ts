@@ -43,7 +43,7 @@ export class PrijavaPage implements OnInit {
           }
 
           this.alertCtrl.create({
-            header: "Authentication failed!",
+            header: "Greška prilikom prijave",
             message,
             buttons: ["Okay"]
           }).then((alert) => {

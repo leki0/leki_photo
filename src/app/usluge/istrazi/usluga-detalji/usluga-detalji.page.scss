@@ -1,40 +1,28 @@
-.center-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.usluga-card {
+  margin: 20px;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+}
+
+.zakazi-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+
+.custom-popover {
+  --width: 300px; 
+  --max-width: 90vw; 
+}
+
+@media (min-width: 768px) {
+  .custom-popover {
+    --width: 400px;
   }
-  
-  .card-img-container {
-    height: 400px;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .custom-popover {
+    --width: 500px;
   }
-  
-  .card-img-container ion-img {
-    height: 100%;
-    width: auto;
-  }
-  
-  .card-text {
-    white-space: normal;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3; /* Broj linija koji želite da prikažete */
-    -webkit-box-orient: vertical;
-  }
-  
-  ion-card {
-    max-height: 1000px; /* Postavite maksimalnu visinu kartice */
-    overflow-y: auto;
-    width: 800px; /* Postavite širinu kartice na dve trećine stranice */
-    margin: 0 auto; /* Centrirajte karticu */
-  }
-  
-  ion-col {
-    display: flex;
-    justify-content: center; /* Centrirajte karticu horizontalno */
-  }
-  
+}

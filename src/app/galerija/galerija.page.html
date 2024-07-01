@@ -1,19 +1,39 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/usluge"> </ion-back-button>
+      <ion-back-button defaultHref="/usluge"></ion-back-button>
     </ion-buttons>
-
-    <ion-title>galerija</ion-title>
+    <ion-title>O meni</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <!-- Dugmad za navigaciju -->
   <ion-buttons class="ion-justify-content-center">
-    <ion-button [routerLink]="'/usluge'" color="tertiary" fill="solid"
-    >Usluge</ion-button>
+    <ion-button [routerLink]="'/usluge'" color="tertiary" fill="solid">
+      Zakazani termini
+    </ion-button>
     <ion-button (click)="openMenu()" color="tertiary" fill="solid">
-      Open menu
+      Glavni meni
     </ion-button>
   </ion-buttons>
+
+  <!-- Centrirana kartica -->
+  <ion-grid class="full-height-grid">
+    <ion-row class="ion-justify-content-center ion-align-items-center full-height-row">
+      <ion-col size="12" size-md="6" size-lg="4">
+        <ion-card class="about-card">
+          <ion-card-header>
+            <ion-card-title>O meni</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-img src="assets/icon/leki.jpg" class="profile-img"></ion-img>
+            <p>
+              Moje ime je Aleksa. Student sam završne godine Fakulteta organizacionih nauka u Beogradu. Fotografijom se bavim 4 godine, a pored dugogodišnjeg iskustva, imam završen i kurs fotografije. Trenutno boravim u Novom Beogradu. Zakažite Vaš termin i prepustite sve ostalo meni.
+            </p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

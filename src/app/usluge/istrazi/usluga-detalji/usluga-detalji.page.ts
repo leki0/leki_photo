@@ -16,6 +16,7 @@ export class UslugaDetaljiPage implements OnInit {
   userRole: string | null = null;
   editMode = false;
   selectedImage: File | null = null;
+  isPopoverOpen = false; // Promenljiva za upravljanje popoverom
 
   constructor(
     private route: ActivatedRoute,
@@ -23,7 +24,7 @@ export class UslugaDetaljiPage implements OnInit {
     private authService: AuthService,
     private alertCtrl: AlertController,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
@@ -43,9 +44,47 @@ export class UslugaDetaljiPage implements OnInit {
     });
   }
 
-  onZakazi() {
+  openDatePicker() {
+    this.isPopoverOpen = true;
+  }
+
+  closePopover() {
+    this.isPopoverOpen = false;
+  }
+
+  confirmDate() {
+    this.closePopover();
+    // Dalje možete dodati logiku za potvrdu datuma ako je potrebno.
+  }
+
+  async onZakazi() {
+    if (!this.datumZakazivanja) {
+      const alert = await this.alertCtrl.create({
+        header: 'Greška',
+        message: 'Datum zakazivanja nije odabran!',
+        buttons: ['OK']
+      });
+      await alert.present();
+      return;
+    }
+  
     if (this.usluga && this.datumZakazivanja) {
-      this.uslugeServis.zakaziUslugu(this.usluga, this.datumZakazivanja).subscribe(async () => {
+      // Formatiramo datum na ISO format
+      const dateToBook = new Date(this.datumZakazivanja).toISOString().split('T')[0];
+  
+      // Proveravamo da li je datum već zakazan
+      if (this.usluga.datumiZakazivanja.includes(dateToBook)) {
+        const alert = await this.alertCtrl.create({
+          header: 'Greška',
+          message: 'Ovaj datum je već zakazan.',
+          buttons: ['OK']
+        });
+        await alert.present();
+        return;
+      }
+  
+      // Ako datum nije zakazan, pozivamo metod za zakazivanje
+      this.uslugeServis.zakaziUslugu(this.usluga, dateToBook).subscribe(async () => {
         const alert = await this.alertCtrl.create({
           header: 'Uspeh',
           message: 'Usluga je uspešno zakazana!',
@@ -56,18 +95,18 @@ export class UslugaDetaljiPage implements OnInit {
             }
           }]
         });
-
+  
         await alert.present();
       });
-    } else {
-      this.alertCtrl.create({
-        header: 'Greška',
-        message: 'Datum zakazivanja nije odabran!',
-        buttons: ['OK']
-      }).then(alertEl => {
-        alertEl.present();
-      });
     }
+  }
+
+  getToday(): string {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = ('0' + (today.getMonth() + 1)).slice(-2);
+    const day = ('0' + today.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
   }
 
   onEdit() {
