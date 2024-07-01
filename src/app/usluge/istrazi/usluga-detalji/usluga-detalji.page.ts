@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Usluga } from 'src/app/usluga.model';
 import { UslugeService } from '../../usluge.service';
 import { AuthService } from 'src/app/auth/auth.service';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-usluga-detalji',
@@ -23,7 +23,8 @@ export class UslugaDetaljiPage implements OnInit {
     private uslugeServis: UslugeService,
     private authService: AuthService,
     private alertCtrl: AlertController,
-    private router: Router
+    private router: Router,
+    private modalCtrl: ModalController
   ) { }
 
   ngOnInit() {
@@ -54,7 +55,7 @@ export class UslugaDetaljiPage implements OnInit {
 
   confirmDate() {
     this.closePopover();
-    // Dalje možete dodati logiku za potvrdu datuma ako je potrebno.
+
   }
 
   async onZakazi() {
