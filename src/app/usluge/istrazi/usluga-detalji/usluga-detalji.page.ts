@@ -16,7 +16,7 @@ export class UslugaDetaljiPage implements OnInit {
   userRole: string | null = null;
   editMode = false;
   selectedImage: File | null = null;
-  isPopoverOpen = false; // Promenljiva za upravljanje popoverom
+  isPopoverOpen = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -55,7 +55,6 @@ export class UslugaDetaljiPage implements OnInit {
 
   confirmDate() {
     this.closePopover();
-
   }
 
   async onZakazi() {
@@ -70,10 +69,10 @@ export class UslugaDetaljiPage implements OnInit {
     }
   
     if (this.usluga && this.datumZakazivanja) {
-      // Formatiramo datum na ISO format
+      // Formatiramo datum na ISO format (samo datum, bez vremena)
       const dateToBook = new Date(this.datumZakazivanja).toISOString().split('T')[0];
   
-      // Proveravamo da li je datum već zakazan
+      // Proveravamo da li je datum već zakazan za ovu uslugu
       if (this.usluga.datumiZakazivanja.includes(dateToBook)) {
         const alert = await this.alertCtrl.create({
           header: 'Greška',
@@ -84,21 +83,23 @@ export class UslugaDetaljiPage implements OnInit {
         return;
       }
   
-      // Ako datum nije zakazan, pozivamo metod za zakazivanje
-      this.uslugeServis.zakaziUslugu(this.usluga, dateToBook).subscribe(async () => {
-        const alert = await this.alertCtrl.create({
-          header: 'Uspeh',
-          message: 'Usluga je uspešno zakazana!',
-          buttons: [{
-            text: 'OK',
-            handler: () => {
-              this.router.navigate(['/usluge/tabs/istrazi']);
-            }
-          }]
-        });
-  
-        await alert.present();
+      // Ako datum nije zakazan, dodajemo ga u listu datuma
+      this.usluga.datumiZakazivanja.push(dateToBook);
+      
+      // Ako postoji backend, ovde bi bio poziv za ažuriranje baze
+      // Simulacija uspešnog zakazivanja
+      const alert = await this.alertCtrl.create({
+        header: 'Uspeh',
+        message: 'Usluga je uspešno zakazana!',
+        buttons: [{
+          text: 'OK',
+          handler: () => {
+            this.router.navigate(['/usluge/tabs/istrazi']);
+          }
+        }]
       });
+  
+      await alert.present();
     }
   }
 

@@ -30,7 +30,7 @@
             <ion-textarea *ngIf="editMode" [(ngModel)]="usluga.kratakOpis"></ion-textarea>
             
             <!-- Dugme za otvaranje popovera -->
-            <ion-button (click)="openDatePicker()" color="tertiary">Postavi datum</ion-button>
+            <ion-button *ngIf="userRole !== 'admin'" (click)="openDatePicker()" color="tertiary">Postavi datum</ion-button>
           </ion-card-content>
         </ion-card>
 
