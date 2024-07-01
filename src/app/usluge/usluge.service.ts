@@ -259,6 +259,42 @@ export class UslugeService {
     );
   }
 
+  updateUsluga(id: string, nazivUsluge: string, kratakOpis: string): Observable<any> {
+    let fetchedUserId: string;
+    return this.authService.userId.pipe(
+      take(1),
+      switchMap(userId => {
+        if (!userId) {
+          throw new Error('No user ID found!');
+        }
+        fetchedUserId = userId;
+        return this.authService.token;
+      }),
+      take(1),
+      switchMap(token => {
+        return this.http.patch(
+          `https://lekiphoto-e1777-default-rtdb.europe-west1.firebasedatabase.app/usluge/${id}.json?auth=${token}`,
+          { nazivUsluge, kratakOpis }
+        );
+      })
+    );
+  }
+
+  deleteUsluga(id: string): Observable<any> {
+    return this.authService.token.pipe(
+      take(1),
+      switchMap(token => {
+        return this.http.delete(
+          `https://lekiphoto-e1777-default-rtdb.europe-west1.firebasedatabase.app/usluge/${id}.json?auth=${token}`
+        );
+      }),
+      tap(() => {
+        this.getUsluge().subscribe();
+      })
+    );
+  }
+
+
   getUsluga(id: string): Observable<Usluga | undefined> {
     return this.usluge.pipe(
       take(1),

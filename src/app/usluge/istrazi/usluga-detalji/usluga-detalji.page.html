@@ -23,17 +23,29 @@
               <ion-img [src]="usluga.slikaUrl"></ion-img>
             </div>
             <ion-card-header>
-              <ion-card-title>{{ usluga.nazivUsluge }}</ion-card-title>
+              <ion-card-title *ngIf="!editMode">{{ usluga.nazivUsluge }}</ion-card-title>
+              <ion-input *ngIf="editMode" [(ngModel)]="usluga.nazivUsluge"></ion-input>
             </ion-card-header>
-            <p class="card-text">{{ usluga.kratakOpis }}</p>
+            <p *ngIf="!editMode" class="card-text">{{ usluga.kratakOpis }}</p>
+            <ion-textarea *ngIf="editMode" [(ngModel)]="usluga.kratakOpis"></ion-textarea>
           </ion-card-content>
         </ion-card>
 
-        <ion-item>
-          <ion-label>Izaberi datum</ion-label>
-          <ion-datetime display-format="DD/MM/YYYY" [(ngModel)]="datumZakazivanja"></ion-datetime>
-        </ion-item>
-        <ion-button expand="full" color="tertiary" (click)="onZakazi()">ZAKAZI</ion-button>
+        <div *ngIf="userRole !== 'admin'">
+          <ion-item>
+            <ion-label>Izaberi datum</ion-label>
+            <ion-datetime display-format="DD/MM/YYYY" [(ngModel)]="datumZakazivanja"></ion-datetime>
+          </ion-item>
+          <ion-button expand="full" color="tertiary" (click)="onZakazi()">ZAKAZI</ion-button>
+        </div>
+
+        <div *ngIf="userRole === 'admin'">
+          <ion-button expand="full" color="primary" (click)="onEdit()">
+            {{ editMode ? 'PREKINI' : 'IZMENI' }}
+          </ion-button>
+          <ion-button *ngIf="editMode" expand="full" color="secondary" (click)="onSave()">SAČUVAJ</ion-button>
+          <ion-button expand="full" color="danger" (click)="onDelete()">OBRIŠI</ion-button>
+        </div>
 
         <div *ngIf="!usluga">
           <ion-text color="danger">
