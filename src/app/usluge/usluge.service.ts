@@ -10,7 +10,10 @@ interface UslugaData {
   slikaUrl: string;
   userId: string;
   datumZakazivanja?: string;
+  lokacija?: string;
+  dodatniKomentar?: string;
 }
+
 @Injectable({
   providedIn: 'root'
 })
@@ -151,7 +154,7 @@ export class UslugeService {
 
   }
 
-  zakaziUslugu(usluga: Usluga, datum: string): Observable<any> {
+  zakaziUslugu(usluga: Usluga, datum: string, lokacija: string, dodatniKomentar: string): Observable<any> {
     let fetchedUserId: string;
     return this.authService.userId.pipe(
       take(1),
@@ -167,6 +170,8 @@ export class UslugeService {
         const zakazanaUsluga = {
           ...usluga,
           datumZakazivanja: datum,
+          lokacija,
+          dodatniKomentar,
           userId: fetchedUserId
         };
         return this.http.post<{ name: string }>(
@@ -215,7 +220,10 @@ export class UslugeService {
                         savedUslugeData[key].kratakOpis,
                         savedUslugeData[key].slikaUrl,
                         savedUslugeData[key].userId,
-                        savedUslugeData[key].datumZakazivanja // dodajte datum zakazivanja
+                        savedUslugeData[key].datumZakazivanja, // dodajte datum zakazivanja
+                        savedUslugeData[key].datumiZakazivanja,
+                        savedUslugeData[key].lokacija || '', // Proverite postojanje
+                        savedUslugeData[key].dodatniKomentar || '' // Proverite postojanje
                       );
                       if (usluga.userId === fetchedUserId) {
                         savedUsluge.push(usluga);
@@ -254,7 +262,10 @@ export class UslugeService {
               allSavedUslugeData[key].kratakOpis,
               allSavedUslugeData[key].slikaUrl,
               allSavedUslugeData[key].userId,
-              allSavedUslugeData[key].datumZakazivanja // dodajte datum zakazivanja
+              allSavedUslugeData[key].datumZakazivanja, // dodajte datum zakazivanja
+              allSavedUslugeData[key].datumiZakazivanja, // Proverite postojanje
+              allSavedUslugeData[key].lokacija || '', 
+              allSavedUslugeData[key].dodatniKomentar || '' // Proverite postojanje
             ));
           }
         }

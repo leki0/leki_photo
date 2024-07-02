@@ -13,11 +13,16 @@ import { AlertController, ModalController } from '@ionic/angular';
 export class UslugaDetaljiPage implements OnInit {
   usluga: Usluga | undefined;
   datumZakazivanja: string | undefined;
+  formattedDatumZakazivanja: string | undefined;
   userRole: string | null = null;
   editMode = false;
   selectedImage: File | null = null;
   isPopoverOpen = false;
   sviDatumiZakazivanja: string[] = [];
+  lokacija: string = ''; // Dodajte inicijalizaciju
+  dodatniKomentar: string = '';
+  isModalOpen = false; // Dodaj ovu liniju
+  selectedTermin: Usluga | null = null; // Dodaj ovu liniju
 
   constructor(
     private route: ActivatedRoute,
@@ -51,6 +56,15 @@ export class UslugaDetaljiPage implements OnInit {
     });
   }
 
+  openModal(termin: Usluga) {
+    this.selectedTermin = termin;
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+  }
+  
   openDatePicker() {
     this.isPopoverOpen = true;
   }
@@ -60,62 +74,66 @@ export class UslugaDetaljiPage implements OnInit {
   }
 
   confirmDate() {
+    if (this.datumZakazivanja) {
+      const date = new Date(this.datumZakazivanja);
+      this.formattedDatumZakazivanja = date.toLocaleDateString('sr-RS');
+    }
     this.closePopover();
   }
 
   async onZakazi() {
     if (!this.datumZakazivanja) {
-        const alert = await this.alertCtrl.create({
-            header: 'Greška',
-            message: 'Datum zakazivanja nije odabran!',
-            buttons: ['OK']
-        });
-        await alert.present();
-        return;
+      const alert = await this.alertCtrl.create({
+        header: 'Greška',
+        message: 'Datum zakazivanja nije odabran!',
+        buttons: ['OK']
+      });
+      await alert.present();
+      return;
     }
 
     if (this.usluga && this.datumZakazivanja) {
-        const dateToBook = new Date(this.datumZakazivanja).toISOString().split('T')[0];
-        console.log("Zakazani datum:" + dateToBook)
-        console.log("Vec postojeci zakazani datumi: " + this.sviDatumiZakazivanja)
+      const dateToBook = new Date(this.datumZakazivanja).toISOString().split('T')[0];
+      console.log("Zakazani datum:" + dateToBook)
+      console.log("Vec postojeci zakazani datumi: " + this.sviDatumiZakazivanja)
 
-        // Proveravamo da li je datum već zakazan za bilo koju uslugu
-        if (this.sviDatumiZakazivanja.includes(dateToBook)) {
-            const alert = await this.alertCtrl.create({
-                header: 'Greška',
-                message: 'Ovaj datum je već zakazan.',
-                buttons: ['OK']
-            });
-            await alert.present();
-            return;
-        }
-
-        // Ako datum nije zakazan, dodajemo ga u listu datuma
-        this.usluga.datumiZakazivanja.push(dateToBook);
-
-        this.uslugeServis.zakaziUslugu(this.usluga, dateToBook).subscribe(async () => {
-            const alert = await this.alertCtrl.create({
-                header: 'Uspeh',
-                message: 'Usluga je uspešno zakazana!',
-                buttons: [{
-                    text: 'OK',
-                    handler: () => {
-                        this.router.navigate(['/usluge/tabs/istrazi']);
-                    }
-                }]
-            });
-            await alert.present();
-        }, async error => {
-            console.error('Greška pri zakazivanju usluge:', error);
-            const alert = await this.alertCtrl.create({
-                header: 'Greška',
-                message: 'Došlo je do greške pri zakazivanju usluge. Pokušajte ponovo kasnije.',
-                buttons: ['OK']
-            });
-            await alert.present();
+      // Proveravamo da li je datum već zakazan za bilo koju uslugu
+      if (this.sviDatumiZakazivanja.includes(dateToBook)) {
+        const alert = await this.alertCtrl.create({
+          header: 'Greška',
+          message: 'Ovaj datum je već zakazan.',
+          buttons: ['OK']
         });
+        await alert.present();
+        return;
+      }
+
+      // Ako datum nije zakazan, dodajemo ga u listu datuma
+      this.usluga.datumiZakazivanja.push(dateToBook);
+
+      this.uslugeServis.zakaziUslugu(this.usluga, dateToBook, this.lokacija, this.dodatniKomentar).subscribe(async () => {
+        const alert = await this.alertCtrl.create({
+          header: 'Uspeh',
+          message: 'Usluga je uspešno zakazana!',
+          buttons: [{
+            text: 'OK',
+            handler: () => {
+              this.router.navigate(['/usluge/tabs/istrazi']);
+            }
+          }]
+        });
+        await alert.present();
+      }, async error => {
+        console.error('Greška pri zakazivanju usluge:', error);
+        const alert = await this.alertCtrl.create({
+          header: 'Greška',
+          message: 'Došlo je do greške pri zakazivanju usluge. Pokušajte ponovo kasnije.',
+          buttons: ['OK']
+        });
+        await alert.present();
+      });
     }
-}
+  }
 
 
   getToday(): string {
