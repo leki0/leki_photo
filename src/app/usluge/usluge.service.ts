@@ -18,8 +18,17 @@ export class UslugeService {
 
   private _usluge = new BehaviorSubject<Usluga[]>([]);
   private _savedUsluge = new BehaviorSubject<Usluga[]>([]);
+  private _sviDatumiZakazivanja: string[] = [];
   get savedUsluge() {
     return this._savedUsluge.asObservable();
+  }
+  getAllDatumiZakazivanja(): Observable<string[]> {
+    return this.getAllSavedUsluge().pipe(
+      map(savedUsluge => savedUsluge
+        .filter(usluga => usluga.datumZakazivanja)
+        .map(usluga => usluga.datumZakazivanja!)
+      )
+    );
   }
 
   saveUsluga(usluga: Usluga) {
@@ -49,8 +58,8 @@ export class UslugeService {
     );
   }
 
-  oldUsluge: Usluga[] = [{ id: "u1", nazivUsluge: "Fotografisanje rodjendana", kratakOpis: "blabla", slikaUrl: "", userId: "x",datumiZakazivanja: []},
-  { id: "u2", nazivUsluge: "Fotografisanje krstenja", kratakOpis: "blabla", slikaUrl: "", userId: "xc",datumiZakazivanja: [] }];
+  oldUsluge: Usluga[] = [{ id: "u1", nazivUsluge: "Fotografisanje rodjendana", kratakOpis: "blabla", slikaUrl: "", userId: "x", datumiZakazivanja: [] },
+  { id: "u2", nazivUsluge: "Fotografisanje krstenja", kratakOpis: "blabla", slikaUrl: "", userId: "xc", datumiZakazivanja: [] }];
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 

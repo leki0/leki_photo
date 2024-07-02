@@ -29,21 +29,20 @@
             <p *ngIf="!editMode" class="card-text">{{ usluga.kratakOpis }}</p>
             <ion-textarea *ngIf="editMode" [(ngModel)]="usluga.kratakOpis"></ion-textarea>
             
-            <!-- Dugme za otvaranje popovera -->
             <ion-button *ngIf="userRole !== 'admin'" (click)="openDatePicker()" color="tertiary">Postavi datum</ion-button>
           </ion-card-content>
         </ion-card>
 
         <div *ngIf="userRole !== 'admin'" class="zakazi-container">
-          <ion-button expand="full" color="tertiary" (click)="onZakazi()">ZAKAZI</ion-button>
+          <ion-button expand="full" color="tertiary" (click)="onZakazi()">Zakaži</ion-button>
         </div>
 
         <div *ngIf="userRole === 'admin'">
           <ion-button expand="full" color="primary" (click)="onEdit()">
-            {{ editMode ? 'PREKINI' : 'IZMENI' }}
+            {{ editMode ? 'Odustani' : 'Izmeni' }}
           </ion-button>
           <ion-button *ngIf="editMode" expand="full" color="secondary" (click)="onSave()">SAČUVAJ</ion-button>
-          <ion-button expand="full" color="danger" (click)="onDelete()">OBRIŠI</ion-button>
+          <ion-button expand="full" color="danger" (click)="onDelete()">Obriši</ion-button>
         </div>
 
         <div *ngIf="!usluga">
@@ -56,13 +55,12 @@
   </ion-grid>
 </ion-content>
 
-<!-- Dodajemo ion-popover za prikazivanje kalendara kao izlazećeg prozora -->
 <ion-popover [isOpen]="isPopoverOpen" (didDismiss)="closePopover()" class="custom-popover">
   <ng-template>
     <ion-item>
       <ion-label>Izaberi datum</ion-label>
       <ion-datetime display-format="DD/MM/YYYY" [(ngModel)]="datumZakazivanja"></ion-datetime>
     </ion-item>
-    <ion-button expand="full" color="tertiary" (click)="confirmDate()">POTVRDI</ion-button>
+    <ion-button expand="full" color="tertiary" (click)="confirmDate()">Potvrdi</ion-button>
   </ng-template>
 </ion-popover>
