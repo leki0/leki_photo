@@ -4,11 +4,13 @@ import { Usluga } from 'src/app/usluga.model';
 import { UslugeService } from '../../usluge.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { AlertController, ModalController } from '@ionic/angular';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-usluga-detalji',
   templateUrl: './usluga-detalji.page.html',
   styleUrls: ['./usluga-detalji.page.scss'],
+  providers: [DatePipe]
 })
 export class UslugaDetaljiPage implements OnInit {
   usluga: Usluga | undefined;
@@ -30,7 +32,8 @@ export class UslugaDetaljiPage implements OnInit {
     private authService: AuthService,
     private alertCtrl: AlertController,
     private router: Router,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private datePipe: DatePipe 
   ) { }
 
   ngOnInit() {
@@ -64,7 +67,7 @@ export class UslugaDetaljiPage implements OnInit {
   closeModal() {
     this.isModalOpen = false;
   }
-  
+
   openDatePicker() {
     this.isPopoverOpen = true;
   }
@@ -72,11 +75,9 @@ export class UslugaDetaljiPage implements OnInit {
   closePopover() {
     this.isPopoverOpen = false;
   }
-
   confirmDate() {
     if (this.datumZakazivanja) {
-      const date = new Date(this.datumZakazivanja);
-      this.formattedDatumZakazivanja = date.toLocaleDateString('sr-RS');
+      this.formattedDatumZakazivanja = this.datePipe.transform(this.datumZakazivanja, 'dd/MM/yyyy HH:mm') || 'N/A';
     }
     this.closePopover();
   }
@@ -93,7 +94,7 @@ export class UslugaDetaljiPage implements OnInit {
     }
 
     if (this.usluga && this.datumZakazivanja) {
-      const dateToBook = new Date(this.datumZakazivanja).toISOString().split('T')[0];
+      const dateToBook = new Date(this.datumZakazivanja).toISOString();
       console.log("Zakazani datum:" + dateToBook)
       console.log("Vec postojeci zakazani datumi: " + this.sviDatumiZakazivanja)
 

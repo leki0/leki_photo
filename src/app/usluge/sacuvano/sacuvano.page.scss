@@ -1,0 +1,41 @@
+ion-content {
+    .clickable-item {
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+  
+    .clickable-item:hover {
+      background-color: #f0f0f0;
+    }
+  
+    ion-card {
+      ion-card-content {
+        p {
+          margin: 0.5em 0;
+        }
+  
+        ion-img {
+          max-height: 200px;
+          object-fit: cover;
+          margin-bottom: 1em;
+        }
+      }
+    }
+  
+    ion-list {
+      margin: 0;
+      padding: 0;
+  
+      ion-item {
+        --padding-start: 0;
+        --inner-padding-end: 0;
+  
+        ion-label {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+      }
+    }
+  }
+  

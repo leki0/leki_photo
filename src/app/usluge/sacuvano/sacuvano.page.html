@@ -6,11 +6,53 @@
 
 <ion-content>
   <ion-list>
-    <ion-item *ngFor="let usluga of savedUsluge">
+    <ion-item 
+      *ngFor="let usluga of savedUsluge" 
+      class="clickable-item"
+      (click)="openModal(usluga)">
       <ion-avatar slot="start">
         <ion-img src="https://img.myloview.com/stickers/camera-with-flash-icon-elements-of-camera-icon-for-concept-and-web-apps-illustration-icon-for-website-design-and-development-app-development-premium-icon-400-111926464.jpg"></ion-img>
       </ion-avatar>
-      <ion-label>{{ usluga.nazivUsluge }} : {{ usluga.datumZakazivanja ? formatDate(usluga.datumZakazivanja) : 'N/A' }}</ion-label>
+      <ion-label>
+        <h2>{{ usluga.nazivUsluge }}</h2>
+        <p>{{ usluga.datumZakazivanja ? formatDate(usluga.datumZakazivanja) : 'N/A' }}</p>
+      </ion-label>
     </ion-item>
   </ion-list>
+
+  <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeModal()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Detalji usluge</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeModal()">Zatvori</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-card *ngIf="selectedTermin">
+          <ion-card-header>
+            <ion-card-title>{{ selectedTermin?.nazivUsluge }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list lines="none">
+              <ion-item>
+                <ion-label><strong>Naziv:</strong> {{ selectedTermin?.nazivUsluge }}</ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-label><strong>Datum i vreme:</strong> {{ selectedTermin?.datumZakazivanja }}</ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-label><strong>Lokacija:</strong> {{ selectedTermin?.lokacija }}</ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-label><strong>Dodatni komentar:</strong> {{ selectedTermin?.dodatniKomentar }}</ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>

@@ -77,12 +77,11 @@
 <ion-popover [isOpen]="isPopoverOpen" (didDismiss)="closePopover()" class="custom-popover">
   <ng-template>
     <ion-item>
-      <ion-label>Izaberi datum</ion-label>
-      <ion-datetime display-format="DD/MM/YYYY" [(ngModel)]="datumZakazivanja"></ion-datetime>
+      <ion-label>Izaberi datum i vreme</ion-label>
+      <ion-datetime display-format="DD/MM/YYYY HH:mm" [(ngModel)]="datumZakazivanja"></ion-datetime>
     </ion-item>
     <ion-button expand="full" color="tertiary" (click)="confirmDate()">Potvrdi</ion-button>
   </ng-template>
 </ion-popover>
-
 
 
