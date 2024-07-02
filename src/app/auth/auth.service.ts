@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Korisnik } from './korisnik.model';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { map, tap } from 'rxjs/operators';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs/internal/Observable';
 
 interface AuthResponseData {
@@ -91,33 +91,88 @@ export class AuthService {
     this._isUserAuthenticated = true;
     return this.http.post<AuthResponseData>(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.firebaseAPIKey}`,
       { email: user.email, password: user.password, returnSecureToken: true })
-      .pipe(tap((userData) => {
-        console.log('User registration data:', userData); // Log response data
-        const expirationTime = new Date(new Date().getTime() + +userData.expiresIn * 1000);
-        const userRole = this.getRole(user.email);
-        const korisnik = new Korisnik(userData.localId, userData.email, userData.idToken, expirationTime, userRole, user.ime, user.prezime);
-        this._user.next(korisnik);
-        this._userData.next({ ...user, ime: user.ime, prezime: user.prezime }); // Save UserData with real names
-        this.users.push({ ...user, ime: user.ime, prezime: user.prezime }); // Save user in local list
-        console.log('Saved user data:', { ...user, ime: user.ime, prezime: user.prezime }); // Log saved user data
-      }));
+      .pipe(
+        tap((userData) => {
+          const expirationTime = new Date(new Date().getTime() + +userData.expiresIn * 1000);
+          const role = this.getRole(user.email);
+          const korisnik = new Korisnik(userData.localId, userData.email, userData.idToken, expirationTime, role, user.ime, user.prezime);
+  
+          this._user.next(korisnik);
+          this.saveUserToDatabase(korisnik).subscribe(() => {
+            this._userData.next({ ...user, ime: user.ime, prezime: user.prezime, role });
+          });
+        })
+      );
+  }
+  
+  
+  private saveUserToDatabase(korisnik: Korisnik) {
+    return this.token.pipe(
+      take(1),
+      switchMap(token => {
+        if (!token) {
+          throw new Error('Token is null');
+        }
+        const userData = {
+          id: korisnik.id,
+          email: korisnik.email,
+          ime: korisnik.ime,
+          prezime: korisnik.prezime
+        };
+        return this.http.put(
+          `https://lekiphoto-e1777-default-rtdb.europe-west1.firebasedatabase.app/users/${korisnik.id}.json?auth=${token}`,
+          userData
+        );
+      })
+    );
+  }
+  
+  private fetchUserFromDatabase(userId: string) {
+    return this.token.pipe(
+      take(1),
+      switchMap(token => {
+        if (!token) {
+          throw new Error('Token is null');
+        }
+        return this.http.get(
+          `https://lekiphoto-e1777-default-rtdb.europe-west1.firebasedatabase.app/users/${userId}.json?auth=${token}`
+        );
+      })
+    );
   }
 
   prijava(user: UserData) {
-    this._isUserAuthenticated = true;
     return this.http.post<AuthResponseData>(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.firebaseAPIKey}`,
       { email: user.email, password: user.password, returnSecureToken: true }
-    ).pipe(tap((userData) => {
-      console.log('User login data:', userData); // Log response data
-      const expirationTime = new Date(new Date().getTime() + +userData.expiresIn * 1000);
-      const userRole = this.getRole(user.email);
-      const registeredUser = this.users.find(u => u.email === user.email); // Find user in local list
-      const korisnik = new Korisnik(userData.localId, userData.email, userData.idToken, expirationTime, userRole, registeredUser?.ime, registeredUser?.prezime);
-      this._user.next(korisnik);
-      this._userData.next({ ...user, ime: registeredUser?.ime, prezime: registeredUser?.prezime }); // Save UserData with real names
-      console.log('Saved user data:', { ...user, ime: registeredUser?.ime, prezime: registeredUser?.prezime }); // Log saved user data
-    }));
+    ).pipe(
+      switchMap((userData) => {
+        const expirationTime = new Date(new Date().getTime() + +userData.expiresIn * 1000);
+        const korisnik = new Korisnik(userData.localId, userData.email, userData.idToken, expirationTime, 'user');
+  
+        this._user.next(korisnik);
+  
+        return this.fetchUserFromDatabase(userData.localId).pipe(
+          tap((fetchedUser: any) => {
+            const role = this.getRole(userData.email);
+            const updatedKorisnik = new Korisnik(
+              userData.localId,
+              userData.email,
+              userData.idToken,
+              expirationTime,
+              role,
+              fetchedUser.ime,
+              fetchedUser.prezime
+            );
+  
+            this._user.next(updatedKorisnik);
+            this._userData.next({ email: user.email, password: user.password, ime: fetchedUser.ime, prezime: fetchedUser.prezime, role });
+          })
+        );
+      })
+    );
   }
+  
+  
 
   private getRole(email: string): string {
     if (email === 'aleksa@gmail.com') {
