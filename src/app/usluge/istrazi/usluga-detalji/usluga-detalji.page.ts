@@ -83,23 +83,42 @@ export class UslugaDetaljiPage implements OnInit {
   }
 
   async onZakazi() {
-    if (!this.datumZakazivanja) {
+    if (!this.datumZakazivanja || !this.lokacija) {
       const alert = await this.alertCtrl.create({
         header: 'Greška',
-        message: 'Datum zakazivanja nije odabran!',
+        message: !this.datumZakazivanja ? 'Datum zakazivanja nije odabran!' : 'Lokacija nije uneta!',
         buttons: ['OK']
       });
       await alert.present();
       return;
     }
 
+    function formatDateForComparison(date:string) {
+      const d = new Date(date);
+      let day = '' + d.getDate();
+      let month = '' + (d.getMonth() + 1);
+      const year = d.getFullYear();
+    
+      if (day.length < 2) day = '0' + day;
+      if (month.length < 2) month = '0' + month;
+    
+      return [day, month, year].join('/');
+    }
+  
     if (this.usluga && this.datumZakazivanja) {
-      const dateToBook = new Date(this.datumZakazivanja).toISOString();
-      console.log("Zakazani datum:" + dateToBook)
-      console.log("Vec postojeci zakazani datumi: " + this.sviDatumiZakazivanja)
-
+      // Čuvamo originalni datum sa vremenom
+      const originalDateToBook = new Date(this.datumZakazivanja).toISOString();
+      
+      // Formatiramo datum za poređenje (dd/MM/yyyy)
+      const dateToBook = formatDateForComparison(this.datumZakazivanja);
+      console.log("Zakazani datum:" + originalDateToBook);
+      console.log("Vec postojeci zakazani datumi: " + this.sviDatumiZakazivanja);
+  
+      // Formatiramo postojeće datume za poređenje (dd/MM/yyyy)
+      const existingDates = this.sviDatumiZakazivanja.map(date => formatDateForComparison(date));
+  
       // Proveravamo da li je datum već zakazan za bilo koju uslugu
-      if (this.sviDatumiZakazivanja.includes(dateToBook)) {
+      if (existingDates.includes(dateToBook)) {
         const alert = await this.alertCtrl.create({
           header: 'Greška',
           message: 'Ovaj datum je već zakazan.',
@@ -108,11 +127,11 @@ export class UslugaDetaljiPage implements OnInit {
         await alert.present();
         return;
       }
-
-      // Ako datum nije zakazan, dodajemo ga u listu datuma
-      this.usluga.datumiZakazivanja.push(dateToBook);
-
-      this.uslugeServis.zakaziUslugu(this.usluga, dateToBook, this.lokacija, this.dodatniKomentar).subscribe(async () => {
+  
+      // Ako datum nije zakazan, dodajemo originalni datum u listu datuma
+      this.usluga.datumiZakazivanja.push(originalDateToBook);
+  
+      this.uslugeServis.zakaziUslugu(this.usluga, originalDateToBook, this.lokacija, this.dodatniKomentar).subscribe(async () => {
         const alert = await this.alertCtrl.create({
           header: 'Uspeh',
           message: 'Usluga je uspešno zakazana!',
@@ -135,7 +154,7 @@ export class UslugaDetaljiPage implements OnInit {
       });
     }
   }
-
+  
 
   getToday(): string {
     const today = new Date();

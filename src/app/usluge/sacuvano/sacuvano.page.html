@@ -41,7 +41,7 @@
                 <ion-label><strong>Naziv:</strong> {{ selectedTermin?.nazivUsluge }}</ion-label>
               </ion-item>
               <ion-item>
-                <ion-label><strong>Datum i vreme:</strong> {{ selectedTermin?.datumZakazivanja }}</ion-label>
+                <ion-label><strong>Datum i vreme:</strong> {{ selectedTermin?.datumZakazivanja ? formatDate(selectedTermin.datumZakazivanja!) : 'N/A' }}</ion-label>
               </ion-item>
               <ion-item>
                 <ion-label><strong>Lokacija:</strong> {{ selectedTermin?.lokacija }}</ion-label>

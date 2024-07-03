@@ -1,87 +1,87 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>{{ usluga?.nazivUsluge }}</ion-title>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/usluge/tabs/istrazi"></ion-back-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+  <ion-header [translucent]="true">
     <ion-toolbar>
-      <ion-title size="large">{{ usluga?.nazivUsluge }}</ion-title>
+      <ion-title>{{ usluga?.nazivUsluge }}</ion-title>
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="/usluge/tabs/istrazi"></ion-back-button>
+      </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
-  <ion-grid class="center-content">
-    <ion-row class="ion-justify-content-center">
-      <ion-col size="12" size-md="8" size-lg="6">
-        <ion-card *ngIf="usluga" class="usluga-card">
-          <ion-card-content>
-            <div class="card-img-container">
-              <ion-img [src]="usluga.slikaUrl"></ion-img>
-            </div>
-            <ion-card-header>
-              <ion-card-title *ngIf="!editMode">{{ usluga.nazivUsluge }}</ion-card-title>
-              <ion-input *ngIf="editMode" [(ngModel)]="usluga.nazivUsluge"></ion-input>
-            </ion-card-header>
-            <p *ngIf="!editMode" class="card-text">{{ usluga.kratakOpis }}</p>
-            <ion-textarea *ngIf="editMode" [(ngModel)]="usluga.kratakOpis"></ion-textarea>
+  <ion-content [fullscreen]="true">
+    <ion-header collapse="condense">
+      <ion-toolbar>
+        <ion-title size="large">{{ usluga?.nazivUsluge }}</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-grid class="center-content">
+      <ion-row class="ion-justify-content-center">
+        <ion-col size="12" size-md="8" size-lg="6">
+          <ion-card *ngIf="usluga" class="usluga-card">
+            <ion-card-content>
+              <div class="card-img-container">
+                <ion-img [src]="usluga.slikaUrl"></ion-img>
+              </div>
+              <ion-card-header>
+                <ion-card-title *ngIf="!editMode">{{ usluga.nazivUsluge }}</ion-card-title>
+                <ion-input *ngIf="editMode" [(ngModel)]="usluga.nazivUsluge"></ion-input>
+              </ion-card-header>
+              <p *ngIf="!editMode" class="card-text">{{ usluga.kratakOpis }}</p>
+              <ion-textarea *ngIf="editMode" [(ngModel)]="usluga.kratakOpis"></ion-textarea>
 
 
-            <ion-button *ngIf="userRole !== 'admin'" (click)="openDatePicker()" color="tertiary">Postavi
-              datum</ion-button>
-            <div *ngIf="formattedDatumZakazivanja" class="selected-date">Odabrani datum: {{ formattedDatumZakazivanja }}
-            </div>
-          </ion-card-content>
+              <ion-button *ngIf="userRole !== 'admin'" (click)="openDatePicker()" color="tertiary">Postavi
+                datum</ion-button>
+              <div *ngIf="formattedDatumZakazivanja" class="selected-date">Odabrani datum: {{ formattedDatumZakazivanja }}
+              </div>
+            </ion-card-content>
 
-          <!-- Dodavanje polja za lokaciju -->
-          <ion-item *ngIf="userRole !== 'admin'">
-            <ion-label position="floating">Lokacija</ion-label>
-            <ion-input [(ngModel)]="lokacija"></ion-input>
-          </ion-item>
+            <!-- Dodavanje polja za lokaciju -->
+            <ion-item *ngIf="userRole !== 'admin'">
+              <ion-label position="floating">Lokacija</ion-label>
+              <ion-input [(ngModel)]="lokacija"></ion-input>
+            </ion-item>
 
-          <!-- Dodavanje polja za dodatni komentar -->
-          <ion-item *ngIf="userRole !== 'admin'">
-            <ion-label position="floating">Dodatni komentar</ion-label>
-            <ion-textarea rows="4" [(ngModel)]="dodatniKomentar"></ion-textarea>
-          </ion-item>
+            <!-- Dodavanje polja za dodatni komentar -->
+            <ion-item *ngIf="userRole !== 'admin'">
+              <ion-label position="floating">Dodatni komentar</ion-label>
+              <ion-textarea rows="4" [(ngModel)]="dodatniKomentar"></ion-textarea>
+            </ion-item>
 
 
-        </ion-card>
+          </ion-card>
 
-        <!-- Dugme za zakaži, koje ostaje isto -->
-        <div *ngIf="userRole !== 'admin'" class="zakazi-container">
-          <ion-button expand="full" color="tertiary" (click)="onZakazi()">Zakaži</ion-button>
-        </div>
+          <!-- Dugme za zakaži, koje ostaje isto -->
+          <div *ngIf="userRole !== 'admin'" class="zakazi-container">
+            <ion-button expand="full" color="tertiary" (click)="onZakazi()">Zakaži</ion-button>
+          </div>
 
-        <div *ngIf="userRole === 'admin'">
-          <ion-button expand="full" color="primary" (click)="onEdit()">
-            {{ editMode ? 'Odustani' : 'Izmeni' }}
-          </ion-button>
-          <ion-button *ngIf="editMode" expand="full" color="secondary" (click)="onSave()">SAČUVAJ</ion-button>
-          <ion-button expand="full" color="danger" (click)="onDelete()">Obriši</ion-button>
-        </div>
+          <div *ngIf="userRole === 'admin'">
+            <ion-button expand="full" color="primary" (click)="onEdit()">
+              {{ editMode ? 'Odustani' : 'Izmeni' }}
+            </ion-button>
+            <ion-button *ngIf="editMode" expand="full" color="secondary" (click)="onSave()">SAČUVAJ</ion-button>
+            <ion-button expand="full" color="danger" (click)="onDelete()">Obriši</ion-button>
+          </div>
 
-        <div *ngIf="!usluga">
-          <ion-text color="danger">
-            <h2>Usluga nije pronađena!</h2>
-          </ion-text>
-        </div>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-</ion-content>
+          <div *ngIf="!usluga">
+            <ion-text color="danger">
+              <h2>Usluga nije pronađena!</h2>
+            </ion-text>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-content>
 
-<ion-popover [isOpen]="isPopoverOpen" (didDismiss)="closePopover()" class="custom-popover">
-  <ng-template>
-    <ion-item>
-      <ion-label>Izaberi datum i vreme</ion-label>
-      <ion-datetime display-format="DD/MM/YYYY HH:mm" [(ngModel)]="datumZakazivanja"></ion-datetime>
-    </ion-item>
-    <ion-button expand="full" color="tertiary" (click)="confirmDate()">Potvrdi</ion-button>
-  </ng-template>
-</ion-popover>
+  <ion-popover [isOpen]="isPopoverOpen" (didDismiss)="closePopover()" class="custom-popover">
+    <ng-template>
+      <ion-item>
+        <ion-label>Izaberi datum i vreme</ion-label>
+        <ion-datetime display-format="DD/MM/YYYY HH:mm" [(ngModel)]="datumZakazivanja"></ion-datetime>
+      </ion-item>
+      <ion-button expand="full" color="tertiary" (click)="confirmDate()">Potvrdi</ion-button>
+    </ng-template>
+  </ion-popover>
 
 
