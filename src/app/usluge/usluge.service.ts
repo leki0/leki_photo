@@ -89,7 +89,7 @@ export class UslugeService {
           '',
           nazivUsluge,
           kratakOpis,
-          "https://img.myloview.com/stickers/camera-with-flash-icon-elements-of-camera-icon-for-concept-and-web-apps-illustration-icon-for-website-design-and-development-app-development-premium-icon-400-111926464.jpg",
+          "assets/icon/zurke.jpg",
           fetchedUserId
         );
         console.log('Nova usluga pre slanja:', novaUsluga);

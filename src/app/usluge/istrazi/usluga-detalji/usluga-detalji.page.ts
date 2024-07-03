@@ -77,10 +77,24 @@ export class UslugaDetaljiPage implements OnInit {
   }
   confirmDate() {
     if (this.datumZakazivanja) {
+      const selectedDate = new Date(this.datumZakazivanja);
+      const today = new Date();
+  
+      // Proveravamo da li je izabrani datum u prošlosti
+      if (selectedDate < today) {
+        this.alertCtrl.create({
+          header: 'Greška',
+          message: 'Ne možete zakazati datum u prošlosti!',
+          buttons: ['OK']
+        }).then(alert => alert.present());
+        return;
+      }
+  
       this.formattedDatumZakazivanja = this.datePipe.transform(this.datumZakazivanja, 'dd/MM/yyyy HH:mm') || 'N/A';
     }
     this.closePopover();
   }
+  
 
   async onZakazi() {
     if (!this.datumZakazivanja || !this.lokacija) {
@@ -92,7 +106,21 @@ export class UslugaDetaljiPage implements OnInit {
       await alert.present();
       return;
     }
-
+  
+    const selectedDate = new Date(this.datumZakazivanja);
+    const today = new Date();
+  
+    // Proveravamo da li je izabrani datum u prošlosti
+    if (selectedDate < today) {
+      const alert = await this.alertCtrl.create({
+        header: 'Greška',
+        message: 'Ne možete zakazati datum u prošlosti!',
+        buttons: ['OK']
+      });
+      await alert.present();
+      return;
+    }
+  
     function formatDateForComparison(date:string) {
       const d = new Date(date);
       let day = '' + d.getDate();
@@ -154,6 +182,7 @@ export class UslugaDetaljiPage implements OnInit {
       });
     }
   }
+  
   
 
   getToday(): string {

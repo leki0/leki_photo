@@ -78,10 +78,15 @@
     <ng-template>
       <ion-item>
         <ion-label>Izaberi datum i vreme</ion-label>
-        <ion-datetime display-format="DD/MM/YYYY HH:mm" [(ngModel)]="datumZakazivanja"></ion-datetime>
+        <ion-datetime
+          display-format="DD/MM/YYYY HH:mm"
+          [(ngModel)]="datumZakazivanja"
+          [min]="getToday()">
+        </ion-datetime>
       </ion-item>
       <ion-button expand="full" color="tertiary" (click)="confirmDate()">Potvrdi</ion-button>
     </ng-template>
   </ion-popover>
+  
 
 
