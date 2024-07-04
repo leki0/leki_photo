@@ -29,8 +29,8 @@ export class UslugaElementComponent implements OnInit {
     event.preventDefault();
     console.log("Otvoren alert prozor!");
     this.alertCtrl.create({
-      header: "Sačuvaj uslugu",
-      message: "Da li ste sigurni da želite da sačuvate uslugu?",
+      header: "Zakaži uslugu",
+      message: "Da li ste sigurni da želite da zakažete uslugu_?",
       buttons: [
         {
           text: "Save",
@@ -53,7 +53,7 @@ export class UslugaElementComponent implements OnInit {
 
   saveUsluga() {
     this.uslugeService.saveUsluga(this.usluga).subscribe(() => {
-      console.log("Sačuvano!");
+      console.log("Zakazano!");
     });
   }
 }

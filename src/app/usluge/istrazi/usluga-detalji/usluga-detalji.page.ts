@@ -21,10 +21,10 @@ export class UslugaDetaljiPage implements OnInit {
   selectedImage: File | null = null;
   isPopoverOpen = false;
   sviDatumiZakazivanja: string[] = [];
-  lokacija: string = ''; // Dodajte inicijalizaciju
+  lokacija: string = ''; 
   dodatniKomentar: string = '';
-  isModalOpen = false; // Dodaj ovu liniju
-  selectedTermin: Usluga | null = null; // Dodaj ovu liniju
+  isModalOpen = false; 
+  selectedTermin: Usluga | null = null; 
 
   constructor(
     private route: ActivatedRoute,
@@ -80,7 +80,6 @@ export class UslugaDetaljiPage implements OnInit {
       const selectedDate = new Date(this.datumZakazivanja);
       const today = new Date();
   
-      // Proveravamo da li je izabrani datum u prošlosti
       if (selectedDate < today) {
         this.alertCtrl.create({
           header: 'Greška',
@@ -110,7 +109,6 @@ export class UslugaDetaljiPage implements OnInit {
     const selectedDate = new Date(this.datumZakazivanja);
     const today = new Date();
   
-    // Proveravamo da li je izabrani datum u prošlosti
     if (selectedDate < today) {
       const alert = await this.alertCtrl.create({
         header: 'Greška',
@@ -134,18 +132,15 @@ export class UslugaDetaljiPage implements OnInit {
     }
   
     if (this.usluga && this.datumZakazivanja) {
-      // Čuvamo originalni datum sa vremenom
+
       const originalDateToBook = new Date(this.datumZakazivanja).toISOString();
       
-      // Formatiramo datum za poređenje (dd/MM/yyyy)
       const dateToBook = formatDateForComparison(this.datumZakazivanja);
       console.log("Zakazani datum:" + originalDateToBook);
       console.log("Vec postojeci zakazani datumi: " + this.sviDatumiZakazivanja);
   
-      // Formatiramo postojeće datume za poređenje (dd/MM/yyyy)
       const existingDates = this.sviDatumiZakazivanja.map(date => formatDateForComparison(date));
   
-      // Proveravamo da li je datum već zakazan za bilo koju uslugu
       if (existingDates.includes(dateToBook)) {
         const alert = await this.alertCtrl.create({
           header: 'Greška',
@@ -156,7 +151,6 @@ export class UslugaDetaljiPage implements OnInit {
         return;
       }
   
-      // Ako datum nije zakazan, dodajemo originalni datum u listu datuma
       this.usluga.datumiZakazivanja.push(originalDateToBook);
   
       this.uslugeServis.zakaziUslugu(this.usluga, originalDateToBook, this.lokacija, this.dodatniKomentar).subscribe(async () => {

@@ -160,7 +160,7 @@ export class UslugeService {
       take(1),
       switchMap(userId => {
         if (!userId) {
-          throw new Error('No user ID found!');
+          throw new Error('Nije pronadjen ID korisnika!');
         }
         fetchedUserId = userId;
         return this.authService.token;
@@ -203,10 +203,8 @@ export class UslugeService {
           take(1),
           switchMap(role => {
             if (role === 'admin') {
-              // Ako je korisnik admin, vratite sve sačuvane usluge
               return this.getAllSavedUsluge();
             } else {
-              // Ako nije admin, vratite samo sačuvane usluge za tog korisnika
               return this.http.get<{ [key: string]: Usluga }>(
                 `https://lekiphoto-e1777-default-rtdb.europe-west1.firebasedatabase.app/savedUsluge.json?auth=${token}`
               ).pipe(
@@ -220,10 +218,10 @@ export class UslugeService {
                         savedUslugeData[key].kratakOpis,
                         savedUslugeData[key].slikaUrl,
                         savedUslugeData[key].userId,
-                        savedUslugeData[key].datumZakazivanja, // dodajte datum zakazivanja
+                        savedUslugeData[key].datumZakazivanja, 
                         savedUslugeData[key].datumiZakazivanja,
-                        savedUslugeData[key].lokacija || '', // Proverite postojanje
-                        savedUslugeData[key].dodatniKomentar || '' // Proverite postojanje
+                        savedUslugeData[key].lokacija || '', 
+                        savedUslugeData[key].dodatniKomentar || '' 
                       );
                       if (usluga.userId === fetchedUserId) {
                         savedUsluge.push(usluga);

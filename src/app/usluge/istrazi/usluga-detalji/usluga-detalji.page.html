@@ -36,13 +36,11 @@
               </div>
             </ion-card-content>
 
-            <!-- Dodavanje polja za lokaciju -->
             <ion-item *ngIf="userRole !== 'admin'">
               <ion-label position="floating">Lokacija</ion-label>
               <ion-input [(ngModel)]="lokacija"></ion-input>
             </ion-item>
 
-            <!-- Dodavanje polja za dodatni komentar -->
             <ion-item *ngIf="userRole !== 'admin'">
               <ion-label position="floating">Dodatni komentar</ion-label>
               <ion-textarea rows="4" [(ngModel)]="dodatniKomentar"></ion-textarea>
@@ -51,7 +49,6 @@
 
           </ion-card>
 
-          <!-- Dugme za zakaži, koje ostaje isto -->
           <div *ngIf="userRole !== 'admin'" class="zakazi-container">
             <ion-button expand="full" color="tertiary" (click)="onZakazi()">Zakaži</ion-button>
           </div>
