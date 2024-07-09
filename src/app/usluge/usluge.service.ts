@@ -260,10 +260,10 @@ export class UslugeService {
               allSavedUslugeData[key].kratakOpis,
               allSavedUslugeData[key].slikaUrl,
               allSavedUslugeData[key].userId,
-              allSavedUslugeData[key].datumZakazivanja, // dodajte datum zakazivanja
-              allSavedUslugeData[key].datumiZakazivanja, // Proverite postojanje
+              allSavedUslugeData[key].datumZakazivanja,
+              allSavedUslugeData[key].datumiZakazivanja,
               allSavedUslugeData[key].lokacija || '', 
-              allSavedUslugeData[key].dodatniKomentar || '' // Proverite postojanje
+              allSavedUslugeData[key].dodatniKomentar || ''
             ));
           }
         }
