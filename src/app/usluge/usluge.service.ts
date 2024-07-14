@@ -51,7 +51,7 @@ export class UslugeService {
           nazivUsluge: usluga.nazivUsluge,
           kratakOpis: usluga.kratakOpis,
           slikaUrl: usluga.slikaUrl,
-          userId: fetchedUserId // Koristimo fetchedUserId koji je string
+          userId: fetchedUserId 
         };
         return this.http.post<{ name: string }>(
           `https://lekiphoto-e1777-default-rtdb.europe-west1.firebasedatabase.app/savedUsluge.json?auth=${token}`,

@@ -7,8 +7,8 @@ export class Usluga {
         public userId: string,
         public datumZakazivanja?: string,
         public datumiZakazivanja: string[] = [],
-        public lokacija?: string,  // Promenjeno u običan string
-        public dodatniKomentar?: string  // Promenjeno u običan string
+        public lokacija?: string,  
+        public dodatniKomentar?: string  
     ) { }
 }
 
