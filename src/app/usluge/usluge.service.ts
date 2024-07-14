@@ -173,7 +173,7 @@ export class UslugeService {
           lokacija,
           dodatniKomentar,
           userId: fetchedUserId
-        };
+        };//stojan
         return this.http.post<{ name: string }>(
           `https://lekiphoto-e1777-default-rtdb.europe-west1.firebasedatabase.app/savedUsluge.json?auth=${token}`,
           zakazanaUsluga
