@@ -3,6 +3,9 @@ import { Usluga } from '../usluga.model';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, map, switchMap, take, tap } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
+import { supabase } from '../../environments/supabase.client';
+import { from } from 'rxjs';
+
 
 interface UslugaData {
   nazivUsluge: string;
@@ -18,7 +21,7 @@ interface UslugaData {
   providedIn: 'root'
 })
 export class UslugeService {
-
+  private slikaUrl: string | undefined;
   private _usluge = new BehaviorSubject<Usluga[]>([]);
   private _savedUsluge = new BehaviorSubject<Usluga[]>([]);
   private _sviDatumiZakazivanja: string[] = [];
@@ -70,6 +73,24 @@ export class UslugeService {
     return this._usluge.asObservable();
   }
 
+  async uploadImageToSupabase(file: File): Promise<string> {
+    const fileName = `${Date.now()}_${file.name}`;
+    const { data, error } = await supabase.storage
+      .from('usluge') 
+      .upload(fileName, file);
+
+      console.log('FILE', file);
+      console.log('FILE name', fileName);
+    if (error) {
+      console.error('Greška prilikom upload-a:', error);
+      throw error;
+    }
+
+    const { data: publicUrlData } = supabase.storage.from('usluge').getPublicUrl(fileName);
+    this.slikaUrl = publicUrlData.publicUrl;
+    return publicUrlData.publicUrl;
+  }
+
   addUsluga(nazivUsluge: string, kratakOpis: string) {
     let generatedId: string;
     let novaUsluga: Usluga;
@@ -89,7 +110,7 @@ export class UslugeService {
           '',
           nazivUsluge,
           kratakOpis,
-          "assets/icon/zurke.jpg",
+          this.slikaUrl || '',
           fetchedUserId
         );
         console.log('Nova usluga pre slanja:', novaUsluga);
@@ -297,18 +318,53 @@ export class UslugeService {
   }
 
   deleteUsluga(id: string): Observable<any> {
-    return this.authService.token.pipe(
-      take(1),
-      switchMap(token => {
-        return this.http.delete(
-          `https://lekiphoto-e1777-default-rtdb.europe-west1.firebasedatabase.app/usluge/${id}.json?auth=${token}`
-        );
-      }),
-      tap(() => {
-        this.getUsluge().subscribe();
-      })
-    );
-  }
+  return this.getUsluga(id).pipe(
+    take(1),
+    switchMap((usluga) => {
+      if (!usluga || !usluga.slikaUrl) {
+        // ako nema slike, brišemo samo podatke
+        return this.deleteUslugaFromFirebase(id);
+      }
+
+      const fileName = this.extractFileNameFromUrl(usluga.slikaUrl);
+return from(
+  supabase.storage.from('usluge').remove([fileName])
+).pipe(
+  switchMap(({ error }) => {
+    if (error) {
+      console.error('Greška pri brisanju slike iz Supabase:', error);
+    } else {
+      console.log('Slika uspešno obrisana:', fileName);
+    }
+
+    return this.deleteUslugaFromFirebase(id);
+  })
+);
+
+    })
+  );
+}
+
+private deleteUslugaFromFirebase(id: string): Observable<any> {
+  return this.authService.token.pipe(
+    take(1),
+    switchMap(token => {
+      return this.http.delete(
+        `https://lekiphoto-e1777-default-rtdb.europe-west1.firebasedatabase.app/usluge/${id}.json?auth=${token}`
+      );
+    }),
+    tap(() => {
+      this.getUsluge().subscribe();
+    })
+  );
+}
+
+private extractFileNameFromUrl(url: string): string {
+  const parts = url.split('/');
+  return decodeURIComponent(parts[parts.length - 1]);
+}
+
+
 
 
   getUsluga(id: string): Observable<Usluga | undefined> {
