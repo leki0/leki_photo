@@ -72,6 +72,34 @@ export class UslugeService {
   get usluge() {
     return this._usluge.asObservable();
   }
+async uploadUpdatedImage(newFile: File, oldImageUrl?: string): Promise<string> {
+  const fileName = `${Date.now()}_${newFile.name}`;
+
+  // Ako postoji stara slika, pokušaj da je obrišeš
+  if (oldImageUrl) {
+    const oldFileName = this.extractFileNameFromUrl(oldImageUrl);
+    const { error: deleteError } = await supabase.storage
+      .from('usluge')
+      .remove([oldFileName]);
+
+    if (deleteError) {
+      console.warn('Greška pri brisanju stare slike:', deleteError);
+    } else {
+      console.log('Stara slika obrisana:', oldFileName);
+    }
+  }
+
+  // Upload nove slike
+  const { error } = await supabase.storage.from('usluge').upload(fileName, newFile);
+  if (error) {
+    throw error;
+  }
+
+  // Vraćanje URL-a nove slike
+  const { data: publicUrlData } = supabase.storage.from('usluge').getPublicUrl(fileName);
+  return publicUrlData.publicUrl;
+}
+
 
   async uploadImageToSupabase(file: File): Promise<string> {
     const fileName = `${Date.now()}_${file.name}`;
@@ -194,7 +222,7 @@ export class UslugeService {
           lokacija,
           dodatniKomentar,
           userId: fetchedUserId
-        };//stojan
+        };
         return this.http.post<{ name: string }>(
           `https://lekiphoto-e1777-default-rtdb.europe-west1.firebasedatabase.app/savedUsluge.json?auth=${token}`,
           zakazanaUsluga
@@ -296,7 +324,7 @@ export class UslugeService {
     );
   }
 
-  updateUsluga(id: string, nazivUsluge: string, kratakOpis: string): Observable<any> {
+  updateUsluga(id: string, nazivUsluge: string, kratakOpis: string, slikaUrl: string): Observable<any> {
     let fetchedUserId: string;
     return this.authService.userId.pipe(
       take(1),
@@ -311,7 +339,7 @@ export class UslugeService {
       switchMap(token => {
         return this.http.patch(
           `https://lekiphoto-e1777-default-rtdb.europe-west1.firebasedatabase.app/usluge/${id}.json?auth=${token}`,
-          { nazivUsluge, kratakOpis }
+          { nazivUsluge, kratakOpis, slikaUrl }
         );
       })
     );

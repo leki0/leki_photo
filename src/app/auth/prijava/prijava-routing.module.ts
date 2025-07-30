@@ -9,8 +9,7 @@ const routes: Routes = [
     component: PrijavaPage
   }
 ];
-//aleksa
-//aaa
+
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],

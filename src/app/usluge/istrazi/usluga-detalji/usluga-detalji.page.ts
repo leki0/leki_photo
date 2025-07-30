@@ -191,14 +191,43 @@ export class UslugaDetaljiPage implements OnInit {
     this.editMode = !this.editMode;
   }
 
-  onSave() {
-    if (this.usluga) {
-      this.uslugeServis.updateUsluga(this.usluga.id, this.usluga.nazivUsluge, this.usluga.kratakOpis).subscribe(() => {
-        console.log('Usluga je uspešno ažurirana');
-        this.editMode = false;
-      });
-    }
+async onSave() {
+  if (!this.usluga) return;
+
+  let newImageUrl = this.usluga.slikaUrl;
+
+  if (this.selectedImage) {
+  try {
+    newImageUrl = await this.uslugeServis.uploadUpdatedImage(this.selectedImage, this.usluga.slikaUrl);
+    this.usluga.slikaUrl = newImageUrl;
+  } catch (err) {
+    console.error('Greška pri uploadu slike:', err);
+    return;
   }
+}
+
+  this.uslugeServis.updateUsluga(
+    this.usluga.id,
+    this.usluga.nazivUsluge,
+    this.usluga.kratakOpis,
+    newImageUrl
+  ).subscribe(() => {
+    console.log('Usluga uspešno ažurirana');
+    this.editMode = false;
+    this.selectedImage = null;
+  });
+}
+
+
+
+  onImageSelected(event: Event) {
+  const fileInput = event.target as HTMLInputElement;
+  if (fileInput?.files && fileInput.files.length > 0) {
+    this.selectedImage = fileInput.files[0];
+    console.log('Odabrana nova slika:', this.selectedImage.name);
+  }
+}
+
 
   onDelete() {
     if (this.usluga) {

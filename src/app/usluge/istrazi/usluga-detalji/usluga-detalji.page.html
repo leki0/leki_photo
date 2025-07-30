@@ -20,7 +20,16 @@
           <ion-card *ngIf="usluga" class="usluga-card">
             <ion-card-content>
               <div class="card-img-container">
-                <ion-img [src]="usluga.slikaUrl"></ion-img>
+                <div class="card-img-container">
+                  <ion-img [src]="usluga.slikaUrl"></ion-img>
+                </div>
+
+                <!-- Input za sliku u edit režimu -->
+                <ion-item *ngIf="editMode">
+                  <ion-label position="stacked">Izmeni sliku</ion-label>
+                  <input type="file" (change)="onImageSelected($event)" accept="image/*">
+                </ion-item>
+
               </div>
               <ion-card-header>
                 <ion-card-title *ngIf="!editMode">{{ usluga.nazivUsluge }}</ion-card-title>
@@ -30,21 +39,21 @@
               <ion-textarea *ngIf="editMode" [(ngModel)]="usluga.kratakOpis"></ion-textarea>
 
 
-              <ion-button *ngIf="userRole !== 'admin'" (click)="openDatePicker()" color="tertiary">Postavi
-                datum</ion-button>
-              <div *ngIf="formattedDatumZakazivanja" class="selected-date">Odabrani datum: {{ formattedDatumZakazivanja }}
-              </div>
-            </ion-card-content>
+                <ion-button *ngIf="userRole !== 'admin'" (click)="openDatePicker()" color="tertiary">Postavi
+                  datum</ion-button>
+                <div *ngIf="formattedDatumZakazivanja" class="selected-date">Odabrani datum: {{ formattedDatumZakazivanja }}
+                </div>
+              </ion-card-content>
 
-            <ion-item *ngIf="userRole !== 'admin'">
-              <ion-label position="floating">Lokacija</ion-label>
-              <ion-input [(ngModel)]="lokacija"></ion-input>
-            </ion-item>
+              <ion-item *ngIf="userRole !== 'admin'">
+                <ion-label position="floating">Lokacija</ion-label>
+                <ion-input [(ngModel)]="lokacija"></ion-input>
+              </ion-item>
 
-            <ion-item *ngIf="userRole !== 'admin'">
-              <ion-label position="floating">Dodatni komentar</ion-label>
-              <ion-textarea rows="4" [(ngModel)]="dodatniKomentar"></ion-textarea>
-            </ion-item>
+              <ion-item *ngIf="userRole !== 'admin'">
+                <ion-label position="floating">Dodatni komentar</ion-label>
+                <ion-textarea rows="4" [(ngModel)]="dodatniKomentar"></ion-textarea>
+              </ion-item>
 
 
           </ion-card>

@@ -31,11 +31,18 @@
 
       <ion-row>
         <ion-col size-sm="6" offset-sm="3">
-          <ion-item>
-            <ion-label>Fotografija</ion-label>
-            <input type="file" (change)="onImageSelected($event)" accept="image/*" />
-          </ion-item>
-          <!-- 📸 Prikaz slike ako je izabrana -->
+          <ion-item lines="none">
+  <ion-label position="stacked">Fotografija</ion-label>
+  <div style="border: 1px solid #ccc; padding: 8px; border-radius: 6px; width: 100%;">
+    <input 
+      type="file" 
+      (change)="onImageSelected($event)" 
+      accept="image/*" 
+      style="width: 100%; border: none; background: transparent;" 
+    />
+  </div>
+</ion-item>
+
           <div *ngIf="selectedImagePreview">
             <img [src]="selectedImagePreview" style="width: 100%; margin-top: 10px; border-radius: 8px;" />
           </div>
